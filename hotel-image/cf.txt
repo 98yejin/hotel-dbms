@@ -1,0 +1,27 @@
+Db design
+
+Background color r 164 g 23 b 28
+
+하얀 박스  r 202 g 111 b 113 
+검은 박스 r 114 g 39 b 41
+
+노란색 글씨(00, 01) r 254 g 251 b 84
+
+로그인 버튼 r 89 g 59 b 60
+
+Sign in box r 208 g 181 b 181
+중복확인 r 220 b 180 b 53
+
+검은 박스 안 글씨 r204 g 203 b 203
+
+박스 밖 글씨 r204 g 203 b 203
+
+한글 폰트 Helvetica Neue 중간체 16pt 
+00/01 Helvetica Neue Bold 40pt
+
+이외 전부 Apple LiGothic
+Sign in 23pt
+Sign in 안의 다른 것들(id, pw … ) 18pt
+
+
+Sign in/log in 버튼은 Helvetica 10pt
