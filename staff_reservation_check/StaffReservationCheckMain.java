@@ -1,5 +1,3 @@
-package staff_reservation_check;
-
 import java.sql.*;
 import java.awt.* ;
 import java.awt.event.* ;
@@ -9,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 import javax.swing.* ;
 import javax.swing.event.*;
+import java.util.ArrayList;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,38 +15,46 @@ import org.jdatepicker.*;
 import org.jdatepicker.util.*;
 import org.jdatepicker.impl.*;
 
-
-/*
- *
- * 필요한 것들
- *
- * 1. method
- *
- * - 예약 정보 가져오기 method (취소될 때 어떻게 작동하는 지...)
- * - 시간
- * - 총 예약 건수
- *
- * 2. 디자인
- *
- * - 제목 글
- *
- * 3. 예약 정보 가져오기 method
- *
- * 1) 일단 날짜를 선택해서 해당하는 날짜에 있는 것만 가져오기
- * 2) 그리고 해당 날짜에 대한 예약을 실시간으로 접수하기
- * 3) 시간을 표시할 수 있도록 하기
- * 4) 색깔.. -> update를 눌렀을 때 바꾸어야하나...??
- *
- *
- * */
-
 public class StaffReservationCheckMain extends JFrame {
-    // 날짜를 반환하기 위한 select 버튼
-    JButton select ;
+    // DB Connection -> 이걸 바꾸자 ... 외부에 있는
+    Connection conn ;
+
+    // update 버튼
+    JButton update ;
+
+    // DB 접속 아이디와 비밀번호
+    String id = "custom";
+    String pw = "custom";
+
+    // 오늘 날짜를 보여주는 라벨
+    JLabel showToday ;
+
+    // 최신 업데이트 시간을 표시하기 위한 Label, 문자열, Format
+    JLabel updateTimeLabel ;
+    String updateTimeStr ;
+    SimpleDateFormat updateTimeFormat = new SimpleDateFormat("HH:mm:ss");
+
+    // 오늘 날짜, 시간 표시
+    Date today = new Date();
+
+    // 선택된 방을 담는 ArrayList
+    ArrayList<String> selectedRoom = new ArrayList<>();
+
     // calender
     JDatePickerImpl datePicker;
 
+    // calender에서 선택한 날짜
+    java.util.Date selectedDate ;
+
+    // sql 형식으로 변환 및 string으로 추출
+    java.sql.Date selectedDate2 = new java.sql.Date(today.getTime());
+    String Date  = selectedDate2.toString();
+
+    // RoomPanel
+    RoomPanel f2,f3,f4;
+
     StaffReservationCheckMain(){
+        connectDB();
 
         // Frame 정보 표시
         setTitle("Staff Reservation Check");
@@ -56,10 +63,12 @@ public class StaffReservationCheckMain extends JFrame {
         Container c = getContentPane();
 
         // 층 마다 방 표시하는 클래스 및 update 버튼 초기화
-        RoomPanel f2 = new RoomPanel(2);
-        RoomPanel f3 = new RoomPanel(3);
-        RoomPanel f4 = new RoomPanel(4);
-        JButton update = new JButton("Update");
+        f2 = new RoomPanel(2);
+        f3 = new RoomPanel(3);
+        f4 = new RoomPanel(4);
+
+        update = new JButton("Update");
+        updateTimeLabel = new JLabel("The Latest Check Time : ");
 
         // calender를 위한 속성 추가
         Properties p = new Properties();
@@ -67,52 +76,163 @@ public class StaffReservationCheckMain extends JFrame {
         p.put("text.month", "Month");
         p.put("text.year", "Year");
 
+        // 오늘 날짜 표시를 위한 것들
+        SimpleDateFormat todayDate = new SimpleDateFormat("yyyy-MM-dd");
+        Date = todayDate.format(today);
+        showToday = new JLabel("Today : "+Date);
+
+        // 오늘 날짜 처음 예약 바로 표시
+        initiallyUpdatedRooms(Date);
+
         // 날짜 선택에 calender로 선택하기 추가
         UtilDateModel model = new UtilDateModel();
         JDatePanelImpl datePanel = new JDatePanelImpl(model,p);
         datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter() );
 
-        // 선택한 날짜를 반환하기 위한 select 버튼 추가
-        select = new JButton("select");
 
-        // calender 창과 select 버튼 크기 조정
-        datePicker.setBounds(10,10,150,50);
-        select.setBounds(160,10,100,30);
+        // calender 창과 오늘 날짜 보여주는 label 조정
+        datePicker.setBounds(500,50,150,50);
+        showToday.setBounds(50,50,150,20);
 
-        // select 버튼에 액션 추가
-        select.addActionListener(new DateListener());
 
-        // 층을 나타내는 버튼, update 버튼 boundary 설정
+        // 층을 나타내는 버튼
         f2.setBounds(50,250,200,150);
         f3.setBounds(300,250,200,150);
         f4.setBounds(550,250,200,150);
-        update.setBounds(600,100,100,50);
 
-        // update 버튼, calender, select 버튼, 층 수를 선택할 수 있는 거 추가
+        // update 버튼 생성 및 listener 등록
+        update.setBounds(650,50,100,30);
+        update.addActionListener(new UpdateListener());
+
+        // 최신 업데이트 시간을 보여주는 label 정보 표시
+        updateTimeLabel.setBounds(500,500,250,20);
+
+        // update 버튼, calender, 방 선택할 수 있는 거 추가 ( 모든 컴포넌트 추가 )
         c.add(update);
         c.add(f2) ; c.add(f3) ; c.add(f4);
-        c.add(select);c.add(datePicker);
+        c.add(datePicker); c.add(showToday);
+        c.add(updateTimeLabel);
 
         setSize(800,600);
+
+        // 창 가운데 정렬
+        Dimension frameSize = this.getSize();
+        Dimension windowSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation((windowSize.width - frameSize.width) / 2, (windowSize.height - frameSize.height) / 2);
+
         setVisible(true);
     }
 
-    class DateListener implements ActionListener{
+    // 처음 켜자마자 오늘 예약 뜨기
+    public void initiallyUpdatedRooms(String Date) {
+        try{
+            // 패널에 오늘 날짜 설정
+            f2.DateInRP = Date ;
+            f3.DateInRP = Date ;
+            f4.DateInRP = Date ;
 
-        // 버튼을 눌렀을 시에 선택한 날짜를 가져오도록 하기 (NullPointerException을 배제하기 위해 선택)
+            // 그 및에는 예약된 방 가져오기
+            String sqlStr = "select room_id from room_reservation "
+                    + "where check_in <= \'" + Date + "\' and \'" + Date + "\' < check_out";
+            PreparedStatement stmt = conn.prepareStatement(sqlStr);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                selectedRoom.add(rs.getString("room_id"));
+            }
+
+            stmt.close();
+            rs.close();
+
+            // 예약된 방 찾기
+            findRooms(f2.hotelRooms,selectedRoom);
+            findRooms(f3.hotelRooms,selectedRoom);
+            findRooms(f4.hotelRooms,selectedRoom);
+
+        }catch(SQLException se3){
+            se3.printStackTrace();
+        }
+    }
+
+    // DB 연결
+    void connectDB(){
+        conn = null ;
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hoteldbms?serverTimezone=Asia/Seoul",id,pw);
+            if(conn == null){
+                System.out.println("fail to connect");
+            }else{
+                System.out.println("success");
+            }
+        }catch(ClassNotFoundException ce){
+            ce.printStackTrace();
+        }catch(SQLException se){
+            se.printStackTrace();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    // update 버튼에 쓰이는 ActionListener
+    class UpdateListener implements ActionListener{
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(datePicker.getModel().getValue() != null) {
-                Date selectedDate = (Date) datePicker.getModel().getValue();
+            Date = null ;
+            selectedRoom = new ArrayList<>();
 
-                // 선택이 잘 되었는 지 보기 위한 출력용 코드 -> 나중에 사라지고 이 자리에 sql이 들어갈 것이다
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String date = df.format(selectedDate);
-                System.out.println(date);
+            if (datePicker.getModel().getValue() != null) {
+                selectedDate = (java.util.Date) datePicker.getModel().getValue();
+                selectedDate2 = new java.sql.Date(selectedDate.getTime());
+                Date = selectedDate2.toString();
+
+                f2.DateInRP = Date ;
+                f3.DateInRP = Date ;
+                f4.DateInRP = Date ;
+
+                long updatetime = System.currentTimeMillis();
+                updateTimeStr = updateTimeFormat.format(new Date(updatetime));
+                updateTimeLabel.setText("The Latest Check Time : " + updateTimeStr);
+            }
+
+            if(Date != null) {
+                try {
+                    String sqlStr = "select room_id from room_reservation "
+                            + "where check_in <= \'" + Date + "\' and \'" + Date + "\' < check_out";
+                    PreparedStatement stmt = conn.prepareStatement(sqlStr);
+                    ResultSet rs = stmt.executeQuery();
+
+                    while (rs.next()) {
+                        selectedRoom.add(rs.getString("room_id"));
+                    }
+
+                    stmt.close();
+                    rs.close();
+
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                }
+
+                findRooms(f2.hotelRooms, selectedRoom);
+                findRooms(f3.hotelRooms, selectedRoom);
+                findRooms(f4.hotelRooms, selectedRoom);
             }
         }
     }
 
+    // 예약된 방을 찾기 위한 method
+    public void findRooms(JButton[] rooms, ArrayList<String> seletedRooms){
+        for(int i = 0 ; i < rooms.length ; i ++){
+            if(seletedRooms.contains(rooms[i].getText())){
+                rooms[i].setForeground(Color.RED);
+            }else{
+                rooms[i].setForeground(Color.GREEN);
+            }
+        }
+    }
+
+    //jDatePicker 를 위한 Date 표시하는 Formatter
     class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
 
         private String datePattern = "yyyy-MM-dd";
