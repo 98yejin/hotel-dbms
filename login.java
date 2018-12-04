@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,7 +27,7 @@ public class login implements ActionListener {
 	private JButton cusloginButton = new JButton("LOGIN");
 	private JButton cusjoinButton = new JButton("REGIST");
 	private JButton cusforgotButton = new JButton("LOST ID/PW?");
-	// ÀÌ»ó ·Î±×ÀÎ //
+	// ì´ìƒ ë¡œê·¸ì¸ //
 	private JFrame cusjoinframe = new JFrame();
 	private JPanel cusjoinpanel = new JPanel();
 	private JLabel cusjoinLabel = new JLabel("REGISTRATION");
@@ -41,13 +40,13 @@ public class login implements ActionListener {
 	private JLabel cusjointphoneLabel = new JLabel("TEMP PHONE");
 	private JLabel cusjoinbirthLabel = new JLabel("* BIRTHDAY");
 	private JLabel cusjoinmsgLabel = new JLabel("Must INPUT data on *.");
-	private JLabel cusjoinidcau = new JLabel("ID´Â 10ÀÚ ÀÌÇÏ");
-	private JLabel cusjoinpwdcau = new JLabel("ºñ¹Ð¹øÈ£´Â 20ÀÚ ÀÌÇÏ");
-	private JLabel cusjoinconfcau = new JLabel("ºñ¹Ð¹øÈ£¿Í ÀÏÄ¡½ÃÄÑÁÖ¼¼¿ä.");
-	private JLabel cusjoinfnamecau = new JLabel("¼ºÀº 25ÀÚ ÀÌÇÏ");
-	private JLabel cusjoinlnamecau = new JLabel("ÀÌ¸§Àº 25ÀÚ ÀÌÇÏ");
-	private JLabel cusjoinphonecau = new JLabel("ÀüÈ­¹øÈ£´Â - ¾øÀÌ 11ÀÚ¸®");
-	private JLabel cusjoinbirthcau = new JLabel("»ý³â¿ùÀÏÀº ±âÈ£¾øÀÌ 6ÀÚ¸®");
+	private JLabel cusjoinidcau = new JLabel("IDëŠ” 10ìž ì´í•˜");
+	private JLabel cusjoinpwdcau = new JLabel("ë¹„ë°€ë²ˆí˜¸ëŠ” 20ìž ì´í•˜");
+	private JLabel cusjoinconfcau = new JLabel("ë¹„ë°€ë²ˆí˜¸ì™€ ì¼ì¹˜ì‹œì¼œì£¼ì„¸ìš”.");
+	private JLabel cusjoinfnamecau = new JLabel("ì„±ì€ 25ìž ì´í•˜");
+	private JLabel cusjoinlnamecau = new JLabel("ì´ë¦„ì€ 25ìž ì´í•˜");
+	private JLabel cusjoinphonecau = new JLabel("ì „í™”ë²ˆí˜¸ëŠ” - ì—†ì´ 11ìžë¦¬");
+	private JLabel cusjoinbirthcau = new JLabel("ìƒë…„ì›”ì¼ì€ ê¸°í˜¸ì—†ì´ 6ìžë¦¬");
 	
 	private JTextField cusjoinidInput = new JTextField();
 	private JPasswordField cusjoinpwdInput = new JPasswordField();
@@ -59,7 +58,7 @@ public class login implements ActionListener {
 	private JTextField cusjoinbirthInput = new JTextField();
 	private JButton cusregistButton = new JButton("REGIST");
 	private JButton cusjoincancelButton = new JButton("CANCEL");
-	// ÀÌ»ó È¸¿ø°¡ÀÔ //
+	// ì´ìƒ íšŒì›ê°€ìž… //
 	
 	private JFrame cusforgotframe = new JFrame();
 	private JPanel cusforgotpanel = new JPanel();
@@ -73,16 +72,16 @@ public class login implements ActionListener {
 	private JTextField cusforgotcphoneInput = new JTextField();
 	private JButton cusfindButton = new JButton("FIND");
 	private JButton cusfindcancelButton = new JButton("CANCEL");
-	// ÀÌ»ó ID/PWÃ£±â //
+	// ì´ìƒ ID/PWì°¾ê¸° //
 	
-	// ÀÌ»ó °í°´ //
+	// ì´ìƒ ê³ ê° //
 	
 	private JFrame mainframe = new JFrame();
 	private JPanel mainpanel = new JPanel();
 	private JButton selcus = new JButton("CUSTOMER LOGIN");
 	private JButton selsta = new JButton("STAFF LOGIN");
 	
-	// ÀÌ»ó ¸ÞÀÎ //
+	// ì´ìƒ ë©”ì¸ //
 	
 	private JFrame staloginframe = new JFrame();
 	private JPanel staloginpanel = new JPanel();
@@ -94,7 +93,7 @@ public class login implements ActionListener {
 	private JButton staloginButton = new JButton("LOGIN");
 	private JButton staforgotButton = new JButton("LOST PW?");
 	
-	// ÀÌ»ó ·Î±×ÀÎ //
+	// ì´ìƒ ë¡œê·¸ì¸ //
 	
 	private JFrame staforgotframe = new JFrame();
 	private JPanel staforgotpanel = new JPanel();
@@ -109,11 +108,11 @@ public class login implements ActionListener {
 	private JTextField staforgotcphoneInput = new JTextField();
 	private JButton stafindButton = new JButton("FIND");
 	private JButton stafindcancelButton = new JButton("CANCEL");
-	// ÀÌ»ó PWÃ£±â //
+	// ì´ìƒ PWì°¾ê¸° //
 	
-	// ÀÌ»ó Á÷¿ø //
+	// ì´ìƒ ì§ì› //
 	
-	public login() { // ¸ÞÀÎÈ­¸é(½ºÅÂÇÁ,°í°´±¸ºÐ)
+	public login() { // ë©”ì¸í™”ë©´(ìŠ¤íƒœí”„,ê³ ê°êµ¬ë¶„)
 		connectDB();
 		
 		mainpanel.setLayout(null);
@@ -127,17 +126,17 @@ public class login implements ActionListener {
 		
 		mainframe.add(mainpanel);
 		
-		mainframe.setTitle("SELECT POSITION");  					// ÇÁ·¹ÀÓ »ó´ÜÀÌ¸§
-		mainframe.setSize(800,600);  								// ÇÁ·¹ÀÓ Å©±â
-		mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // Á¾·á½Ã System.exit() È£Ãâ
+		mainframe.setTitle("SELECT POSITION");  					// í”„ë ˆìž„ ìƒë‹¨ì´ë¦„
+		mainframe.setSize(800,600);  								// í”„ë ˆìž„ í¬ê¸°
+		mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // ì¢…ë£Œì‹œ System.exit() í˜¸ì¶œ
 		mainframe.setVisible(true);	
 		
 	}
 	
-	private void customerlogin() { // °í°´·Î±×ÀÎ
+	private void customerlogin() { // ê³ ê°ë¡œê·¸ì¸
 		
 		cusloginpanel.setLayout(null);	
-		// componentÀ§Ä¡ÁöÁ¤
+		// componentìœ„ì¹˜ì§€ì •
 		cusloginLabel.setBounds(370,105,60,50);
 		cusidLabel.setBounds(255,165,90,30);
 		cuspwdLabel.setBounds(255,215,90,30);
@@ -146,12 +145,12 @@ public class login implements ActionListener {
 		cusloginButton.setBounds(445,165,80,70);
 		cusjoinButton.setBounds(265,265,110,30);
 		cusforgotButton.setBounds(405,265,110,30);
-		// ¹öÆ°¿¡ ActionListener ¿¬°á
+		// ë²„íŠ¼ì— ActionListener ì—°ê²°
 		cusloginButton.addActionListener(this);
 		cusjoinButton.addActionListener(this);
 		cusforgotButton.addActionListener(this);
 		
-		// component panel¿¡Ãß°¡
+		// component panelì—ì¶”ê°€
 		cusloginpanel.add(cusloginLabel);
 		cusloginpanel.add(cusidLabel);
 		cusloginpanel.add(cuspwdLabel);
@@ -160,16 +159,16 @@ public class login implements ActionListener {
 		cusloginpanel.add(cusloginButton);
 		cusloginpanel.add(cusjoinButton);
 		cusloginpanel.add(cusforgotButton);
-		//Panel Frame¿¡ Ãß°¡		
+		//Panel Frameì— ì¶”ê°€		
 		cusloginframe.add(cusloginpanel);
 		
-		cusloginframe.setTitle("CUSTOMER LOGIN");  					// ÇÁ·¹ÀÓ »ó´ÜÀÌ¸§
-		cusloginframe.setSize(800,600);  								// ÇÁ·¹ÀÓ Å©±â
-		cusloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // Á¾·á½Ã System.exit() È£Ãâ
-		cusloginframe.setVisible(true);								// frame È­¸é¿¡ Ç¥½Ã	
+		cusloginframe.setTitle("CUSTOMER LOGIN");  					// í”„ë ˆìž„ ìƒë‹¨ì´ë¦„
+		cusloginframe.setSize(800,600);  								// í”„ë ˆìž„ í¬ê¸°
+		cusloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // ì¢…ë£Œì‹œ System.exit() í˜¸ì¶œ
+		cusloginframe.setVisible(true);								// frame í™”ë©´ì— í‘œì‹œ	
 	}
 		
-	private void customerJoin() { // °í°´È¸¿ø°¡ÀÔ
+	private void customerJoin() { // ê³ ê°íšŒì›ê°€ìž…
 		
 		cusjoinpanel.setLayout(null);
 		cusjoinLabel.setBounds(350,0,100,40);
@@ -244,7 +243,7 @@ public class login implements ActionListener {
 		
 	}
 
-	private void customerForgot() { // °í°´Á¤º¸Ã£±â
+	private void customerForgot() { // ê³ ê°ì •ë³´ì°¾ê¸°
 		cusforgotpanel.setLayout(null);
 		cusforgotlabel.setBounds(370,105,120,50);
 		cusforgotfnamelabel.setBounds(255,165,120,30);
@@ -278,9 +277,9 @@ public class login implements ActionListener {
 		cusforgotframe.setVisible(true);	
 	}
 	
-	private void stafflogin() { // Á÷¿ø·Î±×ÀÎ
+	private void stafflogin() { // ì§ì›ë¡œê·¸ì¸
 		staloginpanel.setLayout(null);	
-		// componentÀ§Ä¡ÁöÁ¤
+		// componentìœ„ì¹˜ì§€ì •
 		staloginLabel.setBounds(370,105,60,50);
 		staidLabel.setBounds(255,165,90,30);
 		stapwdLabel.setBounds(255,215,90,30);
@@ -288,11 +287,11 @@ public class login implements ActionListener {
 		stapwdInput.setBounds(335,215,90,30);
 		staloginButton.setBounds(445,165,100,30);
 		staforgotButton.setBounds(445,215,100,30);
-		// ¹öÆ°¿¡ ActionListener ¿¬°á
+		// ë²„íŠ¼ì— ActionListener ì—°ê²°
 		staloginButton.addActionListener(this);
 		staforgotButton.addActionListener(this);
 		
-		// component panel¿¡Ãß°¡
+		// component panelì—ì¶”ê°€
 		staloginpanel.add(staloginLabel);
 		staloginpanel.add(staidLabel);
 		staloginpanel.add(stapwdLabel);
@@ -300,16 +299,16 @@ public class login implements ActionListener {
 		staloginpanel.add(stapwdInput);
 		staloginpanel.add(staloginButton);
 		staloginpanel.add(staforgotButton);
-		//Panel Frame¿¡ Ãß°¡		
+		//Panel Frameì— ì¶”ê°€		
 		staloginframe.add(staloginpanel);
 		
-		staloginframe.setTitle("STAFF LOGIN");  					// ÇÁ·¹ÀÓ »ó´ÜÀÌ¸§
-		staloginframe.setSize(800,600);  								// ÇÁ·¹ÀÓ Å©±â
-		staloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // Á¾·á½Ã System.exit() È£Ãâ
+		staloginframe.setTitle("STAFF LOGIN");  					// í”„ë ˆìž„ ìƒë‹¨ì´ë¦„
+		staloginframe.setSize(800,600);  								// í”„ë ˆìž„ í¬ê¸°
+		staloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // ì¢…ë£Œì‹œ System.exit() í˜¸ì¶œ
 		staloginframe.setVisible(true);	
 	}
 	
-	private void staffForgot() { // Á÷¿øÁ¤º¸Ã£±â
+	private void staffForgot() { // ì§ì›ì •ë³´ì°¾ê¸°
 		staforgotpanel.setLayout(null);
 		staforgotlabel.setBounds(370,105,120,50);
 		staforgotidlabel.setBounds(255,165,120,30);
@@ -347,7 +346,7 @@ public class login implements ActionListener {
 		staforgotframe.setVisible(true);
 	}
 	
-	public void actionPerformed(ActionEvent e) { // ¹öÆ°ÀÌº¥Æ®
+	public void actionPerformed(ActionEvent e) { // ë²„íŠ¼ì´ë²¤íŠ¸
 		if (e.getSource() == selcus){
 			customerlogin();
 		}
@@ -356,13 +355,13 @@ public class login implements ActionListener {
 			stafflogin();
 		}
 		
-		if (e.getSource() == cusloginButton) { // Customer¿¡¼­ ·Î±×ÀÎ ´­·¶À»¶§ 
+		if (e.getSource() == cusloginButton) { // Customerì—ì„œ ë¡œê·¸ì¸ ëˆŒë €ì„ë•Œ 
 			String logid = cusidInput.getText();
 			String logpw = new String(cuspwdInput.getPassword());
-			if (logid.equals("") || logpw.equals("")) { // ÇÏ³ª¶óµµ ºñ¾îÀÖÀ¸¸é ¸Þ½ÃÁö
-				JOptionPane.showMessageDialog(null,"ID³ª ºñ¹Ð¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-			} else { // µÑ ´Ù ÀÔ·ÂÀÌ ÀÖÀ¸¸é
-				String sql1 = "select count(id) from customer where login_id = '" + logid + "'"; // login_id°¡ ÀÏÄ¡ÇÏ´Â ID °³¼ö¸¦ »÷´Ù
+			if (logid.equals("") || logpw.equals("")) { // í•˜ë‚˜ë¼ë„ ë¹„ì–´ìžˆìœ¼ë©´ ë©”ì‹œì§€
+				JOptionPane.showMessageDialog(null,"IDë‚˜ ë¹„ë°€ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
+			} else { // ë‘˜ ë‹¤ ìž…ë ¥ì´ ìžˆìœ¼ë©´
+				String sql1 = "select count(id) from customer where login_id = '" + logid + "'"; // login_idê°€ ì¼ì¹˜í•˜ëŠ” ID ê°œìˆ˜ë¥¼ ìƒŒë‹¤
 				try{
 					PreparedStatement stmt1 = Con.prepareStatement(sql1);
 					ResultSet rs1 = stmt1.executeQuery();
@@ -370,7 +369,7 @@ public class login implements ActionListener {
 					while(rs1.next()){
 						String idcount = rs1.getString("COUNT(ID)");
 						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"ÇØ´ç ID°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+							JOptionPane.showMessageDialog(null,"í•´ë‹¹ IDê°€ ì¡´ìž¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 						} else {
 							String sql2 = "select login_pw from customer where login_id = '" + logid + "'";
 							try{
@@ -390,14 +389,13 @@ public class login implements ActionListener {
 													userinfo[i] = rs3.getString(i+1);
 												}
 											}
-											System.out.println(Arrays.toString(userinfo));
-											
+											// return //
 										} catch (SQLException se) {
 											se.printStackTrace();
 										}
 										
 									} else {
-										JOptionPane.showMessageDialog(null,"ºñ¹Ð¹øÈ£°¡ Æ²·È½À´Ï´Ù.");										
+										JOptionPane.showMessageDialog(null,"ë¹„ë°€ë²ˆí˜¸ê°€ í‹€ë ¸ìŠµë‹ˆë‹¤.");
 									}
 								}
 							} catch (SQLException se){
@@ -412,7 +410,7 @@ public class login implements ActionListener {
 			}
 		}
 		
-		if (e.getSource() == cusforgotButton) { // ºÐ½Ç ´­·¶À» ¶§
+		if (e.getSource() == cusforgotButton) { // ë¶„ì‹¤ ëˆŒë €ì„ ë•Œ
 			customerForgot();
 		}
 		
@@ -420,11 +418,13 @@ public class login implements ActionListener {
 			String findfname = cusforgotfnameInput.getText();
 			String findlname = cusforgotlnameInput.getText();
 			String findcphone = cusforgotcphoneInput.getText();
-			if (findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // ÇÏ³ª¶óµµ ºñ¾îÀÖÀ¸¸é ¸Þ½ÃÁö
-				JOptionPane.showMessageDialog(null,"ÀÔ·ÂµÇÁö ¾ÊÀº Ç×¸ñÀÌ ÀÖ½À´Ï´Ù.");
+			if (findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // í•˜ë‚˜ë¼ë„ ë¹„ì–´ìžˆìœ¼ë©´ ë©”ì‹œì§€
+				JOptionPane.showMessageDialog(null,"ìž…ë ¥ë˜ì§€ ì•Šì€ í•­ëª©ì´ ìžˆìŠµë‹ˆë‹¤.");
+			} else if(findcphone.length() != 11){
+				JOptionPane.showMessageDialog(null,"ì „í™”ë²ˆí˜¸ëŠ” \"-\" ì—†ëŠ” 11ìžë¦¬ì˜ ìˆ«ìžìž…ë‹ˆë‹¤.");
 			} else {
 				String sql1 = "select count(id) from customer where first_name = '" + findfname + "' and last_name = '"
-						+ findlname + "' and cell_phone_number = '" + findcphone + "'"; // login_id°¡ ÀÏÄ¡ÇÏ´Â ID °³¼ö¸¦ »÷´Ù
+						+ findlname + "' and cell_phone_number = '" + findcphone + "'"; // login_idê°€ ì¼ì¹˜í•˜ëŠ” ID ê°œìˆ˜ë¥¼ ìƒŒë‹¤
 				try{
 					PreparedStatement stmt1 = Con.prepareStatement(sql1);
 					ResultSet rs1 = stmt1.executeQuery();
@@ -432,7 +432,7 @@ public class login implements ActionListener {
 					while(rs1.next()){
 						String idcount = rs1.getString("COUNT(ID)");
 						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"ÇØ´ç °èÁ¤ÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+							JOptionPane.showMessageDialog(null,"í•´ë‹¹ ê³„ì •ì´ ì¡´ìž¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 						} else {
 							String sql2 = "select login_id,login_pw from customer where first_name = '" + findfname + "' and last_name = '"
 									+ findlname + "' and cell_phone_number = '" + findcphone + "'";;
@@ -446,7 +446,8 @@ public class login implements ActionListener {
 										find[i] = rs2.getString(i+1);
 									}
 								}
-								System.out.println(Arrays.toString(find));
+								JOptionPane.showMessageDialog(null,"ê²€ìƒ‰ ê²°ê³¼ ...\n ID : " + find[0] + "\n PW : " + find[1]);
+								cusforgotframe.dispose();
 							} catch (SQLException se){
 								se.printStackTrace();
 							}
@@ -459,11 +460,11 @@ public class login implements ActionListener {
 			}
 		}
 		
-		if (e.getSource() == cusjoinButton) { // ·Î±×ÀÎ Ã¢¿¡¼­ È¸¿ø°¡ÀÔ ´­·µÀ» ¶§
+		if (e.getSource() == cusjoinButton) { // ë¡œê·¸ì¸ ì°½ì—ì„œ íšŒì›ê°€ìž… ëˆŒëŸ¿ì„ ë•Œ
 			customerJoin();
 		}
 		
-		if (e.getSource() == cusregistButton) { // °¡ÀÔÇÏ±â ´­·¶À» ¶§
+		if (e.getSource() == cusregistButton) { // ê°€ìž…í•˜ê¸° ëˆŒë €ì„ ë•Œ
 			String regiid = cusjoinidInput.getText();
 			String regipw = new String(cusjoinpwdInput.getPassword());
 			String confpw = new String(cusjoinconfInput.getPassword());
@@ -478,21 +479,21 @@ public class login implements ActionListener {
 				numtphone = Integer.parseInt(regitphone);
 			}
 			
-			if (regiid.equals("") || regipw.equals("") ||confpw.equals("") ||regifname.equals("") ||regilname.equals("") ||regicphone.equals("") ||regibirth.equals("")){ // ÇÏ³ª¶óµµ °ø¶õ
-				JOptionPane.showMessageDialog(null, new JTextArea("ÀÔ·ÂÇÏÁö ¾ÊÀº ÇÊ¼öÇ×¸ñÀÌ Á¸ÀçÇÕ´Ï´Ù."));
+			if (regiid.equals("") || regipw.equals("") ||confpw.equals("") ||regifname.equals("") ||regilname.equals("") ||regicphone.equals("") ||regibirth.equals("")){ // í•˜ë‚˜ë¼ë„ ê³µëž€
+				JOptionPane.showMessageDialog(null, new JTextArea("ìž…ë ¥í•˜ì§€ ì•Šì€ í•„ìˆ˜í•­ëª©ì´ ì¡´ìž¬í•©ë‹ˆë‹¤."));
 			} else if (regiid.length() > 10) {
-				JOptionPane.showMessageDialog(null, new JTextArea("»ç¿ëÇÒ ID°¡ ³Ê¹« ±é´Ï´Ù. 10ÀÚ ÀÌÇÏ·Î ¸¸µé¾îÁÖ¼¼¿ä."));
+				JOptionPane.showMessageDialog(null, new JTextArea("ì‚¬ìš©í•  IDê°€ ë„ˆë¬´ ê¹ë‹ˆë‹¤. 10ìž ì´í•˜ë¡œ ë§Œë“¤ì–´ì£¼ì„¸ìš”."));
 			} else if (regipw.length() > 20) {
-				JOptionPane.showMessageDialog(null, new JTextArea("»ç¿ëÇÒ ºñ¹Ð¹øÈ£°¡ ³Ê¹« ±é´Ï´Ù. 20ÀÚ ÀÌÇÏ·Î ¸¸µé¾îÁÖ¼¼¿ä."));
+				JOptionPane.showMessageDialog(null, new JTextArea("ì‚¬ìš©í•  ë¹„ë°€ë²ˆí˜¸ê°€ ë„ˆë¬´ ê¹ë‹ˆë‹¤. 20ìž ì´í•˜ë¡œ ë§Œë“¤ì–´ì£¼ì„¸ìš”."));
 			} else if (regifname.length() > 25) {
-				JOptionPane.showMessageDialog(null, new JTextArea("ÀÔ·ÂÇÑ ¼ºÀÇ ±æÀÌ°¡ ³Ê¹« ±é´Ï´Ù. 25ÀÚ ÀÌÇÏ·Î ÀÔ·ÂÇØÁÖ¼¼¿ä."));
+				JOptionPane.showMessageDialog(null, new JTextArea("ìž…ë ¥í•œ ì„±ì˜ ê¸¸ì´ê°€ ë„ˆë¬´ ê¹ë‹ˆë‹¤. 25ìž ì´í•˜ë¡œ ìž…ë ¥í•´ì£¼ì„¸ìš”."));
 			} else if (regilname.length() > 25) {
-				JOptionPane.showMessageDialog(null, new JTextArea("ÀÔ·ÂÇÑ ÀÌ¸§ÀÇ ±æÀÌ°¡ ³Ê¹« ±é´Ï´Ù. 25ÀÚ ÀÌÇÏ·Î ÀÔ·ÂÇØÁÖ¼¼¿ä."));
+				JOptionPane.showMessageDialog(null, new JTextArea("ìž…ë ¥í•œ ì´ë¦„ì˜ ê¸¸ì´ê°€ ë„ˆë¬´ ê¹ë‹ˆë‹¤. 25ìž ì´í•˜ë¡œ ìž…ë ¥í•´ì£¼ì„¸ìš”."));
 			} else if (regicphone.length() != 11 || numcphone > 1099999999 || numcphone < 1000000000 ||
 					(regitphone.length() != 11 & regitphone.length() != 0)) {
-				JOptionPane.showMessageDialog(null, new JTextArea("ÀüÈ­¹øÈ£°¡ ¿Ã¹Ù¸£°Ô ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù."));
+				JOptionPane.showMessageDialog(null, new JTextArea("ì „í™”ë²ˆí˜¸ê°€ ì˜¬ë°”ë¥´ê²Œ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 			}  else if (regibirth.length() != 6) {
-				JOptionPane.showMessageDialog(null, new JTextArea("»ýÀÏÀÌ ¿Ã¹Ù¸£°Ô ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù."));
+				JOptionPane.showMessageDialog(null, new JTextArea("ìƒì¼ì´ ì˜¬ë°”ë¥´ê²Œ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 			} else {
 					String sql1 = "select count(id) from customer where login_id = '" + regiid + "'";
 					try{
@@ -501,9 +502,9 @@ public class login implements ActionListener {
 						while (rs1.next()){
 							String chk = rs1.getString("COUNT(ID)");
 							if (!chk.equals("0")){
-								JOptionPane.showMessageDialog(null,"ÀÌ¹Ì »ç¿ëÁßÀÎ IDÀÔ´Ï´Ù!");
+								JOptionPane.showMessageDialog(null,"ì´ë¯¸ ì‚¬ìš©ì¤‘ì¸ IDìž…ë‹ˆë‹¤!");
 							} else if (!regipw.equals(confpw)){
-									JOptionPane.showMessageDialog(null,"ºñ¹Ð¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.");
+									JOptionPane.showMessageDialog(null,"ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 							} else {
 								try{
 									if (numtphone == 0) {
@@ -517,13 +518,12 @@ public class login implements ActionListener {
 										PreparedStatement stmt2 = Con.prepareStatement(sql2);
 										stmt2.executeUpdate(sql2);
 									}	
-									
-										
+										JOptionPane.showMessageDialog(null, "í™˜ì˜í•©ë‹ˆë‹¤! \n ë¡œê·¸ì¸ ID : " + regiid + "\ní™•ì¸ì„ ëˆ„ë¥´ë©´ ì°½ì´ ë‹«íž™ë‹ˆë‹¤.");
+										cusjoinframe.dispose();
 									} catch (SQLException se){
 										se.printStackTrace();
 									}
-									JOptionPane.showMessageDialog(null, "È¯¿µÇÕ´Ï´Ù! È®ÀÎÀ» ´©¸£¸é Ã¢ÀÌ ´ÝÈü´Ï´Ù.");
-									cusjoinframe.dispose();
+									
 								}
 						}		
 					} catch (SQLException se){
@@ -532,7 +532,7 @@ public class login implements ActionListener {
 				}
 			}
 		
-		if (e.getSource() == cusjoincancelButton) { // È¸¿ø°¡ÀÔ Ã¢¿¡¼­ Ãë¼Ò ´­·¶À» ¶§
+		if (e.getSource() == cusjoincancelButton) { // íšŒì›ê°€ìž… ì°½ì—ì„œ ì·¨ì†Œ ëˆŒë €ì„ ë•Œ
 			cusjoinframe.dispose();
 		}
 		
@@ -540,16 +540,16 @@ public class login implements ActionListener {
 			cusforgotframe.dispose();
 		}
 		
-		///////////À§·Î´Â °í°´, ¾Æ·¡´Â ½ºÅÂÇÁ ////////////
+		///////////ìœ„ë¡œëŠ” ê³ ê°, ì•„ëž˜ëŠ” ìŠ¤íƒœí”„ ////////////
 		
 		
-		if (e.getSource() == staloginButton) { // STAFF¿¡¼­ ·Î±×ÀÎ ´­·¶À»¶§ 
+		if (e.getSource() == staloginButton) { // STAFFì—ì„œ ë¡œê·¸ì¸ ëˆŒë €ì„ë•Œ 
 			String logid = staidInput.getText();
 			String logpw = new String(stapwdInput.getPassword());
-			if (logid.equals("") || logpw.equals("")) { // ÇÏ³ª¶óµµ ºñ¾îÀÖÀ¸¸é ¸Þ½ÃÁö
-				JOptionPane.showMessageDialog(null,"ID³ª ºñ¹Ð¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-			} else { // µÑ ´Ù ÀÔ·ÂÀÌ ÀÖÀ¸¸é
-				String sql1 = "select count(id) from staff where id = '" + logid + "'"; // login_id°¡ ÀÏÄ¡ÇÏ´Â ID °³¼ö¸¦ »÷´Ù
+			if (logid.equals("") || logpw.equals("")) { // í•˜ë‚˜ë¼ë„ ë¹„ì–´ìžˆìœ¼ë©´ ë©”ì‹œì§€
+				JOptionPane.showMessageDialog(null,"IDë‚˜ ë¹„ë°€ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
+			} else { // ë‘˜ ë‹¤ ìž…ë ¥ì´ ìžˆìœ¼ë©´
+				String sql1 = "select count(id) from staff where id = '" + logid + "'"; // login_idê°€ ì¼ì¹˜í•˜ëŠ” ID ê°œìˆ˜ë¥¼ ìƒŒë‹¤
 				try{
 					PreparedStatement stmt1 = Con.prepareStatement(sql1);
 					ResultSet rs1 = stmt1.executeQuery();
@@ -557,7 +557,7 @@ public class login implements ActionListener {
 					while(rs1.next()){
 						String idcount = rs1.getString("COUNT(ID)");
 						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"ÇØ´ç ID°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+							JOptionPane.showMessageDialog(null,"í•´ë‹¹ IDê°€ ì¡´ìž¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 						} else {
 							String sql2 = "select login_pw from staff where id = '" + logid + "'";
 							try{
@@ -577,14 +577,13 @@ public class login implements ActionListener {
 													userinfo[i] = rs3.getString(i+1);
 												}
 											}
-											System.out.println(Arrays.toString(userinfo));
-											
+											// Return //
 										} catch (SQLException se) {
 											se.printStackTrace();
 										}
 										
 									} else {
-										JOptionPane.showMessageDialog(null,"ºñ¹Ð¹øÈ£°¡ Æ²·È½À´Ï´Ù.");										
+										JOptionPane.showMessageDialog(null,"ë¹„ë°€ë²ˆí˜¸ê°€ í‹€ë ¸ìŠµë‹ˆë‹¤.");										
 									}
 								}
 							} catch (SQLException se){
@@ -598,7 +597,7 @@ public class login implements ActionListener {
 			
 			}
 		}
-		if (e.getSource() == staforgotButton) { // ºÐ½Ç ´­·¶À» ¶§
+		if (e.getSource() == staforgotButton) { // ë¶„ì‹¤ ëˆŒë €ì„ ë•Œ
 			staffForgot();
 		}
 		
@@ -607,8 +606,10 @@ public class login implements ActionListener {
 			String findfname = staforgotfnameInput.getText();
 			String findlname = staforgotlnameInput.getText();
 			String findcphone = staforgotcphoneInput.getText();
-			if (findid.equals("") || findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // ÇÏ³ª¶óµµ ºñ¾îÀÖÀ¸¸é ¸Þ½ÃÁö
-				JOptionPane.showMessageDialog(null,"ÀÔ·ÂµÇÁö ¾ÊÀº Ç×¸ñÀÌ ÀÖ½À´Ï´Ù.");
+			if (findid.equals("") || findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // í•˜ë‚˜ë¼ë„ ë¹„ì–´ìžˆìœ¼ë©´ ë©”ì‹œì§€
+				JOptionPane.showMessageDialog(null,"ìž…ë ¥ë˜ì§€ ì•Šì€ í•­ëª©ì´ ìžˆìŠµë‹ˆë‹¤.");
+			} else if(findcphone.length() != 11){
+				JOptionPane.showMessageDialog(null,"ì „í™”ë²ˆí˜¸ëŠ” \"-\" ì—†ëŠ” 11ìžë¦¬ì˜ ìˆ«ìžìž…ë‹ˆë‹¤.");
 			} else {
 				String sql1 = "select count(id) from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
 						+ findlname + "' and cell_phone_number = '" + findcphone + "'";
@@ -619,21 +620,22 @@ public class login implements ActionListener {
 					while(rs1.next()){
 						String idcount = rs1.getString("COUNT(ID)");
 						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"ÇØ´ç °èÁ¤ÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+							JOptionPane.showMessageDialog(null,"í•´ë‹¹ ê³„ì •ì´ ì¡´ìž¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 						} else {
-							String sql2 = "select id,login_pw from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
+							String sql2 = "select login_pw from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
 									+ findlname + "' and cell_phone_number = '" + findcphone + "'";;
 							try{
 								PreparedStatement stmt2 = Con.prepareStatement(sql2);
 								ResultSet rs2 = stmt2.executeQuery();
 								
-								String [] find = new String[2];
+								String [] find = new String[1];
 								while(rs2.next()){
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 1; i++) {
 										find[i] = rs2.getString(i+1);
 									}
 								}
-								System.out.println(Arrays.toString(find));
+								JOptionPane.showMessageDialog(null,"ê²€ìƒ‰ ê²°ê³¼ ...\n PW : " + find[0] + "\n í™•ì¸ì„ ëˆ„ë¥´ë©´ ì°½ì´ ë‹«íž™ë‹ˆë‹¤.");
+								staforgotframe.dispose();
 							} catch (SQLException se){
 								se.printStackTrace();
 							}
