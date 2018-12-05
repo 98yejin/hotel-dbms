@@ -112,6 +112,11 @@ public class login implements ActionListener {
 	
 	// 이상 직원 //
 	
+	static String cusid;
+	static String staid;
+	static String status;
+
+
 	public login() { // 메인화면(스태프,고객구분)
 		connectDB();
 		
@@ -129,7 +134,7 @@ public class login implements ActionListener {
 		mainframe.setTitle("SELECT POSITION");  					// 프레임 상단이름
 		mainframe.setSize(800,600);  								// 프레임 크기
 		mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // 종료시 System.exit() 호출
-		mainframe.setVisible(true);	
+		mainframe.setVisible(true);
 		
 	}
 	
@@ -165,9 +170,66 @@ public class login implements ActionListener {
 		cusloginframe.setTitle("CUSTOMER LOGIN");  					// 프레임 상단이름
 		cusloginframe.setSize(800,600);  								// 프레임 크기
 		cusloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // 종료시 System.exit() 호출
-		cusloginframe.setVisible(true);								// frame 화면에 표시	
-	}
+		cusloginframe.setVisible(true);	// frame 화면에 표시
 		
+	}
+	
+	private String customerloginact() { // 고객 로그인 버튼 누를때
+		String logid = cusidInput.getText();
+		String logpw = new String(cuspwdInput.getPassword());
+		if (logid.equals("") || logpw.equals("")) { // 하나라도 비어있으면 메시지
+			JOptionPane.showMessageDialog(null,"ID나 비밀번호가 입력되지 않았습니다.");
+		} else { // 둘 다 입력이 있으면
+			String sql1 = "select count(id) from customer where login_id = '" + logid + "'"; // login_id가 일치하는 ID 개수를 샌다
+			try{
+				PreparedStatement stmt1 = Con.prepareStatement(sql1);
+				ResultSet rs1 = stmt1.executeQuery();
+				
+				while(rs1.next()){
+					String idcount = rs1.getString("COUNT(ID)");
+					if (idcount.equals("0")){
+						JOptionPane.showMessageDialog(null,"해당 ID가 존재하지 않습니다");
+					} else {
+						String sql2 = "select login_pw from customer where login_id = '" + logid + "'";
+						try{
+							PreparedStatement stmt2 = Con.prepareStatement(sql2);
+							ResultSet rs2 = stmt2.executeQuery();
+							
+							while(rs2.next()){
+								String pwtest = rs2.getString("LOGIN_PW");
+								if (pwtest.equals(logpw)){
+									String sql3 = "select id from customer where login_id = '" + logid + "'";
+									try{
+										PreparedStatement stmt3 = Con.prepareStatement(sql3);
+										ResultSet rs3 = stmt3.executeQuery();
+										while (rs3.next()){
+											cusid = rs3.getString(("ID"));
+										}
+										while (!cusid.isEmpty()){
+											cusloginframe.dispose();
+											return cusid;
+										}
+									} catch (SQLException se) {
+										se.printStackTrace();
+									}
+									
+								} else {
+									JOptionPane.showMessageDialog(null,"비밀번호가 틀렸습니다.");
+								}
+							}
+						} catch (SQLException se){
+							se.printStackTrace();
+						}
+					}
+				}
+			} catch (SQLException se){
+				se.printStackTrace();
+			}
+		
+		}
+		return null;
+	}
+
 	private void customerJoin() { // 고객회원가입
 		
 		cusjoinpanel.setLayout(null);
@@ -243,6 +305,74 @@ public class login implements ActionListener {
 		
 	}
 
+	private void customerJoinact() { // 가입창에서 가입누를때
+		String regiid = cusjoinidInput.getText();
+		String regipw = new String(cusjoinpwdInput.getPassword());
+		String confpw = new String(cusjoinconfInput.getPassword());
+		String regifname = cusjoinfnameInput.getText();
+		String regilname = cusjoinlnameInput.getText();
+		String regicphone = cusjoincphoneInput.getText();
+		String regitphone = cusjointphoneInput.getText();
+		String regibirth = cusjoinbirthInput.getText();
+		int numcphone = Integer.parseInt(regicphone);
+		int numtphone = 0;
+		if (!regitphone.equals("")) {
+			numtphone = Integer.parseInt(regitphone);
+		}
+		
+		if (regiid.equals("") || regipw.equals("") ||confpw.equals("") ||regifname.equals("") ||regilname.equals("") ||regicphone.equals("") ||regibirth.equals("")){ // 하나라도 공란
+			JOptionPane.showMessageDialog(null, new JTextArea("입력하지 않은 필수항목이 존재합니다."));
+		} else if (regiid.length() > 10) {
+			JOptionPane.showMessageDialog(null, new JTextArea("사용할 ID가 너무 깁니다. 10자 이하로 만들어주세요."));
+		} else if (regipw.length() > 20) {
+			JOptionPane.showMessageDialog(null, new JTextArea("사용할 비밀번호가 너무 깁니다. 20자 이하로 만들어주세요."));
+		} else if (regifname.length() > 25) {
+			JOptionPane.showMessageDialog(null, new JTextArea("입력한 성의 길이가 너무 깁니다. 25자 이하로 입력해주세요."));
+		} else if (regilname.length() > 25) {
+			JOptionPane.showMessageDialog(null, new JTextArea("입력한 이름의 길이가 너무 깁니다. 25자 이하로 입력해주세요."));
+		} else if (regicphone.length() != 11 || numcphone > 1099999999 || numcphone < 1000000000 ||
+				(regitphone.length() != 11 & regitphone.length() != 0)) {
+			JOptionPane.showMessageDialog(null, new JTextArea("전화번호가 올바르게 입력되지 않았습니다."));
+		}  else if (regibirth.length() != 6) {
+			JOptionPane.showMessageDialog(null, new JTextArea("생일이 올바르게 입력되지 않았습니다."));
+		} else {
+				String sql1 = "select count(id) from customer where login_id = '" + regiid + "'";
+				try{
+					PreparedStatement stmt1 = Con.prepareStatement(sql1);
+					ResultSet rs1 = stmt1.executeQuery();
+					while (rs1.next()){
+						String chk = rs1.getString("COUNT(ID)");
+						if (!chk.equals("0")){
+							JOptionPane.showMessageDialog(null,"이미 사용중인 ID입니다!");
+						} else if (!regipw.equals(confpw)){
+								JOptionPane.showMessageDialog(null,"비밀번호가 일치하지 않습니다.");
+						} else {
+							try{
+								if (numtphone == 0) {
+									String sql2 = "insert into customer(first_name, last_name, cell_phone_number, temp_phone_number, birthday, login_id, login_pw)  values ('"
+											+ regifname + "','" + regilname + "'," + numcphone + "," + null + ",date(" + regibirth + "),'" + regiid + "','" + regipw + "')";
+									PreparedStatement stmt2 = Con.prepareStatement(sql2);
+									stmt2.executeUpdate(sql2);
+								} else {
+									String sql2 = "insert into customer(first_name, last_name, cell_phone_number, temp_phone_number, birthday, login_id, login_pw)  values ('"
+										+ regifname + "','" + regilname + "'," + numcphone + "," + numtphone + ",date(" + regibirth + "),'" + regiid + "','" + regipw + "')";
+									PreparedStatement stmt2 = Con.prepareStatement(sql2);
+									stmt2.executeUpdate(sql2);
+								}	
+									JOptionPane.showMessageDialog(null, "환영합니다! \n 로그인 ID : " + regiid + "\n확인을 누르면 창이 닫힙니다.");
+									cusjoinframe.dispose();
+								} catch (SQLException se){
+									se.printStackTrace();
+								}
+								
+							}
+					}		
+				} catch (SQLException se){
+					se.printStackTrace();
+				}
+			}
+	}
+	
 	private void customerForgot() { // 고객정보찾기
 		cusforgotpanel.setLayout(null);
 		cusforgotlabel.setBounds(370,105,120,50);
@@ -277,6 +407,52 @@ public class login implements ActionListener {
 		cusforgotframe.setVisible(true);	
 	}
 	
+	private void customerForgotact() { // 고객 찾기창에서 찾기누를때
+		String findfname = cusforgotfnameInput.getText();
+		String findlname = cusforgotlnameInput.getText();
+		String findcphone = cusforgotcphoneInput.getText();
+		if (findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // 하나라도 비어있으면 메시지
+			JOptionPane.showMessageDialog(null,"입력되지 않은 항목이 있습니다.");
+		} else if(findcphone.length() != 11){
+			JOptionPane.showMessageDialog(null,"전화번호는 \"-\" 없는 11자리의 숫자입니다.");
+		} else {
+			String sql1 = "select count(id) from customer where first_name = '" + findfname + "' and last_name = '"
+					+ findlname + "' and cell_phone_number = '" + findcphone + "'"; // login_id가 일치하는 ID 개수를 샌다
+			try{
+				PreparedStatement stmt1 = Con.prepareStatement(sql1);
+				ResultSet rs1 = stmt1.executeQuery();
+				
+				while(rs1.next()){
+					String idcount = rs1.getString("COUNT(ID)");
+					if (idcount.equals("0")){
+						JOptionPane.showMessageDialog(null,"해당 계정이 존재하지 않습니다");
+					} else {
+						String sql2 = "select login_id,login_pw from customer where first_name = '" + findfname + "' and last_name = '"
+								+ findlname + "' and cell_phone_number = '" + findcphone + "'";;
+						try{
+							PreparedStatement stmt2 = Con.prepareStatement(sql2);
+							ResultSet rs2 = stmt2.executeQuery();
+							
+							String [] find = new String[2];
+							while(rs2.next()){
+								for (int i = 0; i < 2; i++) {
+									find[i] = rs2.getString(i+1);
+								}
+							}
+							JOptionPane.showMessageDialog(null,"검색 결과 ...\n ID : " + find[0] + "\n PW : " + find[1]);
+							cusforgotframe.dispose();
+						} catch (SQLException se){
+							se.printStackTrace();
+						}
+					}
+				}
+			} catch (SQLException se){
+				se.printStackTrace();
+			}
+		
+		}
+	}
+	
 	private void stafflogin() { // 직원로그인
 		staloginpanel.setLayout(null);	
 		// component위치지정
@@ -305,7 +481,64 @@ public class login implements ActionListener {
 		staloginframe.setTitle("STAFF LOGIN");  					// 프레임 상단이름
 		staloginframe.setSize(800,600);  								// 프레임 크기
 		staloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // 종료시 System.exit() 호출
-		staloginframe.setVisible(true);	
+		staloginframe.setVisible(true);
+		
+	}
+	
+	private String staffloginact() {
+		String logid = staidInput.getText();
+		String logpw = new String(stapwdInput.getPassword());
+		if (logid.equals("") || logpw.equals("")) { // 하나라도 비어있으면 메시지
+			JOptionPane.showMessageDialog(null,"ID나 비밀번호가 입력되지 않았습니다.");
+		} else { // 둘 다 입력이 있으면
+			String sql1 = "select count(id) from staff where id = '" + logid + "'"; // login_id가 일치하는 ID 개수를 샌다
+			try{
+				PreparedStatement stmt1 = Con.prepareStatement(sql1);
+				ResultSet rs1 = stmt1.executeQuery();
+				
+				while(rs1.next()){
+					String idcount = rs1.getString("COUNT(ID)");
+					if (idcount.equals("0")){
+						JOptionPane.showMessageDialog(null,"해당 ID가 존재하지 않습니다");
+					} else {
+						String sql2 = "select login_pw from staff where id = '" + logid + "'";
+						try{
+							PreparedStatement stmt2 = Con.prepareStatement(sql2);
+							ResultSet rs2 = stmt2.executeQuery();
+							
+							while(rs2.next()){
+								String pwtest = rs2.getString("LOGIN_PW");
+								if (pwtest.equals(logpw)){
+									String sql3 = "select id from staff where id = '" + logid + "'";
+									try{
+										PreparedStatement stmt3 = Con.prepareStatement(sql3);
+										ResultSet rs3 = stmt3.executeQuery();
+										while (rs3.next()){
+											staid = rs3.getString("ID");
+										}
+										while (!staid.isEmpty()){
+											staloginframe.dispose();
+											return staid;
+										}
+									} catch (SQLException se) {
+										se.printStackTrace();
+									}
+									
+								} else {
+									JOptionPane.showMessageDialog(null,"비밀번호가 틀렸습니다.");										
+								}
+							}
+						} catch (SQLException se){
+							se.printStackTrace();
+						}
+					}
+				}
+			} catch (SQLException se){
+				se.printStackTrace();
+			}
+		
+		}
+		return null;
 	}
 	
 	private void staffForgot() { // 직원정보찾기
@@ -345,314 +578,101 @@ public class login implements ActionListener {
 		staforgotframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		staforgotframe.setVisible(true);
 	}
-	
-	public void actionPerformed(ActionEvent e) { // 버튼이벤트
-		if (e.getSource() == selcus){
-			customerlogin();
-		}
-		
-		if (e.getSource() == selsta){
-			stafflogin();
-		}
-		
-		if (e.getSource() == cusloginButton) { // Customer에서 로그인 눌렀을때 
-			String logid = cusidInput.getText();
-			String logpw = new String(cuspwdInput.getPassword());
-			if (logid.equals("") || logpw.equals("")) { // 하나라도 비어있으면 메시지
-				JOptionPane.showMessageDialog(null,"ID나 비밀번호가 입력되지 않았습니다.");
-			} else { // 둘 다 입력이 있으면
-				String sql1 = "select count(id) from customer where login_id = '" + logid + "'"; // login_id가 일치하는 ID 개수를 샌다
-				try{
-					PreparedStatement stmt1 = Con.prepareStatement(sql1);
-					ResultSet rs1 = stmt1.executeQuery();
-					
-					while(rs1.next()){
-						String idcount = rs1.getString("COUNT(ID)");
-						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"해당 ID가 존재하지 않습니다");
-						} else {
-							String sql2 = "select login_pw from customer where login_id = '" + logid + "'";
-							try{
-								PreparedStatement stmt2 = Con.prepareStatement(sql2);
-								ResultSet rs2 = stmt2.executeQuery();
-								
-								while(rs2.next()){
-									String pwtest = rs2.getString("LOGIN_PW");
-									if (pwtest.equals(logpw)){
-										String sql3 = "select * from customer where login_id = '" + logid + "'";
-										try{
-											PreparedStatement stmt3 = Con.prepareStatement(sql3);
-											ResultSet rs3 = stmt3.executeQuery();
-											String [] userinfo = new String[8];
-											while (rs3.next()){
-												for (int i = 0; i < 8; i++) {
-													userinfo[i] = rs3.getString(i+1);
-												}
-											}
-											// return //
-										} catch (SQLException se) {
-											se.printStackTrace();
-										}
-										
-									} else {
-										JOptionPane.showMessageDialog(null,"비밀번호가 틀렸습니다.");
-									}
+
+	private void staffForgotact() {
+		String findid = staforgotidInput.getText();
+		String findfname = staforgotfnameInput.getText();
+		String findlname = staforgotlnameInput.getText();
+		String findcphone = staforgotcphoneInput.getText();
+		if (findid.equals("") || findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // 하나라도 비어있으면 메시지
+			JOptionPane.showMessageDialog(null,"입력되지 않은 항목이 있습니다.");
+		} else if(findcphone.length() != 11){
+			JOptionPane.showMessageDialog(null,"전화번호는 \"-\" 없는 11자리의 숫자입니다.");
+		} else {
+			String sql1 = "select count(id) from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
+					+ findlname + "' and cell_phone_number = '" + findcphone + "'";
+			try{
+				PreparedStatement stmt1 = Con.prepareStatement(sql1);
+				ResultSet rs1 = stmt1.executeQuery();
+				
+				while(rs1.next()){
+					String idcount = rs1.getString("COUNT(ID)");
+					if (idcount.equals("0")){
+						JOptionPane.showMessageDialog(null,"해당 계정이 존재하지 않습니다");
+					} else {
+						String sql2 = "select login_pw from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
+								+ findlname + "' and cell_phone_number = '" + findcphone + "'";;
+						try{
+							PreparedStatement stmt2 = Con.prepareStatement(sql2);
+							ResultSet rs2 = stmt2.executeQuery();
+							
+							String [] find = new String[1];
+							while(rs2.next()){
+								for (int i = 0; i < 1; i++) {
+									find[i] = rs2.getString(i+1);
 								}
-							} catch (SQLException se){
-								se.printStackTrace();
 							}
+							JOptionPane.showMessageDialog(null,"검색 결과 ...\n PW : " + find[0] + "\n 확인을 누르면 창이 닫힙니다.");
+							staforgotframe.dispose();
+						} catch (SQLException se){
+							se.printStackTrace();
 						}
 					}
-				} catch (SQLException se){
-					se.printStackTrace();
 				}
-			
+			} catch (SQLException se){
+				se.printStackTrace();
 			}
-		}
 		
+		}
+	}
+	
+	public void actionPerformed(ActionEvent e) { // 버튼이벤트
+		if (e.getSource() == selcus){ // 고객선택시
+			customerlogin();
+			status = "customer";
+		}
+		if (e.getSource() == selsta){ // 직원선택시
+			stafflogin();
+			status = "staff";
+		}
+		if (e.getSource() == cusloginButton) { // Customer에서 로그인 눌렀을때 
+			cusid = customerloginact();
+		}
 		if (e.getSource() == cusforgotButton) { // 분실 눌렀을 때
 			customerForgot();
 		}
-		
-		if (e.getSource() == cusfindButton) {
-			String findfname = cusforgotfnameInput.getText();
-			String findlname = cusforgotlnameInput.getText();
-			String findcphone = cusforgotcphoneInput.getText();
-			if (findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // 하나라도 비어있으면 메시지
-				JOptionPane.showMessageDialog(null,"입력되지 않은 항목이 있습니다.");
-			} else if(findcphone.length() != 11){
-				JOptionPane.showMessageDialog(null,"전화번호는 \"-\" 없는 11자리의 숫자입니다.");
-			} else {
-				String sql1 = "select count(id) from customer where first_name = '" + findfname + "' and last_name = '"
-						+ findlname + "' and cell_phone_number = '" + findcphone + "'"; // login_id가 일치하는 ID 개수를 샌다
-				try{
-					PreparedStatement stmt1 = Con.prepareStatement(sql1);
-					ResultSet rs1 = stmt1.executeQuery();
-					
-					while(rs1.next()){
-						String idcount = rs1.getString("COUNT(ID)");
-						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"해당 계정이 존재하지 않습니다");
-						} else {
-							String sql2 = "select login_id,login_pw from customer where first_name = '" + findfname + "' and last_name = '"
-									+ findlname + "' and cell_phone_number = '" + findcphone + "'";;
-							try{
-								PreparedStatement stmt2 = Con.prepareStatement(sql2);
-								ResultSet rs2 = stmt2.executeQuery();
-								
-								String [] find = new String[2];
-								while(rs2.next()){
-									for (int i = 0; i < 2; i++) {
-										find[i] = rs2.getString(i+1);
-									}
-								}
-								JOptionPane.showMessageDialog(null,"검색 결과 ...\n ID : " + find[0] + "\n PW : " + find[1]);
-								cusforgotframe.dispose();
-							} catch (SQLException se){
-								se.printStackTrace();
-							}
-						}
-					}
-				} catch (SQLException se){
-					se.printStackTrace();
-				}
-			
-			}
+		if (e.getSource() == cusfindButton) { // 찾기에서 찾기버튼 누를때
+			customerForgotact();
 		}
-		
 		if (e.getSource() == cusjoinButton) { // 로그인 창에서 회원가입 눌럿을 때
 			customerJoin();
 		}
-		
 		if (e.getSource() == cusregistButton) { // 가입하기 눌렀을 때
-			String regiid = cusjoinidInput.getText();
-			String regipw = new String(cusjoinpwdInput.getPassword());
-			String confpw = new String(cusjoinconfInput.getPassword());
-			String regifname = cusjoinfnameInput.getText();
-			String regilname = cusjoinlnameInput.getText();
-			String regicphone = cusjoincphoneInput.getText();
-			String regitphone = cusjointphoneInput.getText();
-			String regibirth = cusjoinbirthInput.getText();
-			int numcphone = Integer.parseInt(regicphone);
-			int numtphone = 0;
-			if (!regitphone.equals("")) {
-				numtphone = Integer.parseInt(regitphone);
-			}
-			
-			if (regiid.equals("") || regipw.equals("") ||confpw.equals("") ||regifname.equals("") ||regilname.equals("") ||regicphone.equals("") ||regibirth.equals("")){ // 하나라도 공란
-				JOptionPane.showMessageDialog(null, new JTextArea("입력하지 않은 필수항목이 존재합니다."));
-			} else if (regiid.length() > 10) {
-				JOptionPane.showMessageDialog(null, new JTextArea("사용할 ID가 너무 깁니다. 10자 이하로 만들어주세요."));
-			} else if (regipw.length() > 20) {
-				JOptionPane.showMessageDialog(null, new JTextArea("사용할 비밀번호가 너무 깁니다. 20자 이하로 만들어주세요."));
-			} else if (regifname.length() > 25) {
-				JOptionPane.showMessageDialog(null, new JTextArea("입력한 성의 길이가 너무 깁니다. 25자 이하로 입력해주세요."));
-			} else if (regilname.length() > 25) {
-				JOptionPane.showMessageDialog(null, new JTextArea("입력한 이름의 길이가 너무 깁니다. 25자 이하로 입력해주세요."));
-			} else if (regicphone.length() != 11 || numcphone > 1099999999 || numcphone < 1000000000 ||
-					(regitphone.length() != 11 & regitphone.length() != 0)) {
-				JOptionPane.showMessageDialog(null, new JTextArea("전화번호가 올바르게 입력되지 않았습니다."));
-			}  else if (regibirth.length() != 6) {
-				JOptionPane.showMessageDialog(null, new JTextArea("생일이 올바르게 입력되지 않았습니다."));
-			} else {
-					String sql1 = "select count(id) from customer where login_id = '" + regiid + "'";
-					try{
-						PreparedStatement stmt1 = Con.prepareStatement(sql1);
-						ResultSet rs1 = stmt1.executeQuery();
-						while (rs1.next()){
-							String chk = rs1.getString("COUNT(ID)");
-							if (!chk.equals("0")){
-								JOptionPane.showMessageDialog(null,"이미 사용중인 ID입니다!");
-							} else if (!regipw.equals(confpw)){
-									JOptionPane.showMessageDialog(null,"비밀번호가 일치하지 않습니다.");
-							} else {
-								try{
-									if (numtphone == 0) {
-										String sql2 = "insert into customer(first_name, last_name, cell_phone_number, temp_phone_number, birthday, login_id, login_pw)  values ('"
-												+ regifname + "','" + regilname + "'," + numcphone + "," + null + ",date(" + regibirth + "),'" + regiid + "','" + regipw + "')";
-										PreparedStatement stmt2 = Con.prepareStatement(sql2);
-										stmt2.executeUpdate(sql2);
-									} else {
-										String sql2 = "insert into customer(first_name, last_name, cell_phone_number, temp_phone_number, birthday, login_id, login_pw)  values ('"
-											+ regifname + "','" + regilname + "'," + numcphone + "," + numtphone + ",date(" + regibirth + "),'" + regiid + "','" + regipw + "')";
-										PreparedStatement stmt2 = Con.prepareStatement(sql2);
-										stmt2.executeUpdate(sql2);
-									}	
-										JOptionPane.showMessageDialog(null, "환영합니다! \n 로그인 ID : " + regiid + "\n확인을 누르면 창이 닫힙니다.");
-										cusjoinframe.dispose();
-									} catch (SQLException se){
-										se.printStackTrace();
-									}
-									
-								}
-						}		
-					} catch (SQLException se){
-						se.printStackTrace();
-					}
-				}
-			}
-		
+			customerJoinact();			
+		}
 		if (e.getSource() == cusjoincancelButton) { // 회원가입 창에서 취소 눌렀을 때
 			cusjoinframe.dispose();
 		}
-		
-		if(e.getSource() == cusfindcancelButton) {
+		if(e.getSource() == cusfindcancelButton) { // 찾기창에서 취소누를때
 			cusforgotframe.dispose();
 		}
 		
 		///////////위로는 고객, 아래는 스태프 ////////////
 		
-		
 		if (e.getSource() == staloginButton) { // STAFF에서 로그인 눌렀을때 
-			String logid = staidInput.getText();
-			String logpw = new String(stapwdInput.getPassword());
-			if (logid.equals("") || logpw.equals("")) { // 하나라도 비어있으면 메시지
-				JOptionPane.showMessageDialog(null,"ID나 비밀번호가 입력되지 않았습니다.");
-			} else { // 둘 다 입력이 있으면
-				String sql1 = "select count(id) from staff where id = '" + logid + "'"; // login_id가 일치하는 ID 개수를 샌다
-				try{
-					PreparedStatement stmt1 = Con.prepareStatement(sql1);
-					ResultSet rs1 = stmt1.executeQuery();
-					
-					while(rs1.next()){
-						String idcount = rs1.getString("COUNT(ID)");
-						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"해당 ID가 존재하지 않습니다");
-						} else {
-							String sql2 = "select login_pw from staff where id = '" + logid + "'";
-							try{
-								PreparedStatement stmt2 = Con.prepareStatement(sql2);
-								ResultSet rs2 = stmt2.executeQuery();
-								
-								while(rs2.next()){
-									String pwtest = rs2.getString("LOGIN_PW");
-									if (pwtest.equals(logpw)){
-										String sql3 = "select * from staff where id = '" + logid + "'";
-										try{
-											PreparedStatement stmt3 = Con.prepareStatement(sql3);
-											ResultSet rs3 = stmt3.executeQuery();
-											String [] userinfo = new String[15];
-											while (rs3.next()){
-												for (int i = 0; i < 15; i++) {
-													userinfo[i] = rs3.getString(i+1);
-												}
-											}
-											// Return //
-										} catch (SQLException se) {
-											se.printStackTrace();
-										}
-										
-									} else {
-										JOptionPane.showMessageDialog(null,"비밀번호가 틀렸습니다.");										
-									}
-								}
-							} catch (SQLException se){
-								se.printStackTrace();
-							}
-						}
-					}
-				} catch (SQLException se){
-					se.printStackTrace();
-				}
-			
-			}
+			staid = staffloginact();
 		}
 		if (e.getSource() == staforgotButton) { // 분실 눌렀을 때
 			staffForgot();
 		}
-		
-		if (e.getSource() == stafindButton) {
-			String findid = staforgotidInput.getText();
-			String findfname = staforgotfnameInput.getText();
-			String findlname = staforgotlnameInput.getText();
-			String findcphone = staforgotcphoneInput.getText();
-			if (findid.equals("") || findfname.equals("") || findlname.equals("") || findcphone.equals("")) { // 하나라도 비어있으면 메시지
-				JOptionPane.showMessageDialog(null,"입력되지 않은 항목이 있습니다.");
-			} else if(findcphone.length() != 11){
-				JOptionPane.showMessageDialog(null,"전화번호는 \"-\" 없는 11자리의 숫자입니다.");
-			} else {
-				String sql1 = "select count(id) from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
-						+ findlname + "' and cell_phone_number = '" + findcphone + "'";
-				try{
-					PreparedStatement stmt1 = Con.prepareStatement(sql1);
-					ResultSet rs1 = stmt1.executeQuery();
-					
-					while(rs1.next()){
-						String idcount = rs1.getString("COUNT(ID)");
-						if (idcount.equals("0")){
-							JOptionPane.showMessageDialog(null,"해당 계정이 존재하지 않습니다");
-						} else {
-							String sql2 = "select login_pw from staff where id = '" + findid + "' and first_name = '" + findfname + "' and last_name = '"
-									+ findlname + "' and cell_phone_number = '" + findcphone + "'";;
-							try{
-								PreparedStatement stmt2 = Con.prepareStatement(sql2);
-								ResultSet rs2 = stmt2.executeQuery();
-								
-								String [] find = new String[1];
-								while(rs2.next()){
-									for (int i = 0; i < 1; i++) {
-										find[i] = rs2.getString(i+1);
-									}
-								}
-								JOptionPane.showMessageDialog(null,"검색 결과 ...\n PW : " + find[0] + "\n 확인을 누르면 창이 닫힙니다.");
-								staforgotframe.dispose();
-							} catch (SQLException se){
-								se.printStackTrace();
-							}
-						}
-					}
-				} catch (SQLException se){
-					se.printStackTrace();
-				}
-			
-			}
+		if (e.getSource() == stafindButton) { // 찾기창에서 찾기버튼 누를때
+			staffForgotact();			
 		}
-		
-		
-		if(e.getSource() == stafindcancelButton) {
+		if(e.getSource() == stafindcancelButton) { // 찾기창에서 취소누를때
 			staforgotframe.dispose();
 		}
 	}
+	
 	private static Connection Con;
 	private void connectDB(){
 		Con = null;
@@ -673,5 +693,6 @@ public class login implements ActionListener {
 	}
 	public static void main(String[] args) {
 		new login();
+		
 	}
 }
