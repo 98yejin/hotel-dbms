@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class TaskPersonalPage implements ActionListener{
 	
 	Connection connection=null;
-	int staff_id = 18030002; //나중에 로그인 정보 받아와야 함
+	int staff_id = 18030003; //나중에 로그인 정보 받아와야 함
 	
 	private JFrame frame = new JFrame();
 	private JLabel hello = new JLabel();
@@ -33,7 +33,7 @@ public class TaskPersonalPage implements ActionListener{
 	String contents1[][] = new String[2][8];
 	String contents2[][] = new String[1][7];
 	
-	JTable table1 ;
+	
 	JTable table2 ;
 	String days1[] = {" ", "1", "2", "3", "4", "5", "6", "7"};
 	String days2[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"};
@@ -59,19 +59,13 @@ public class TaskPersonalPage implements ActionListener{
 		vacation_start.setBounds(150, 400, 70, 30);
 		to.setBounds(230, 400, 10, 30);
 		vacation_end.setBounds(250, 400, 70, 30);
-		Update.setBounds(650, 500, 100, 30);
 		
 		attend.addActionListener(this);
 		leave.addActionListener(this);
-//		Update.addActionListener(this);
-		
-		
-		contents1[0][0] = "Attend";
-		contents1[1][0] = "Leave";
+		showAttendance.addActionListener(this);
 		
 		try {
 			FindStaff();
-			//makeTable1();
 			showCount();
 			makeTable2();
 			vacation();
@@ -79,14 +73,12 @@ public class TaskPersonalPage implements ActionListener{
 			e.printStackTrace();
 		}
 		
-		DefaultTableModel model1 = new DefaultTableModel(contents1, days1);
-		table1 = new JTable(model1);
+		
 		table2 = new JTable(contents2, days2);
 		
-		table1.setEnabled(false);
+		
 		table2.setEnabled(false);
-		JScrollPane scrollpane1 = new JScrollPane(table1);
-		scrollpane1.setBounds(150,93,470,57);
+
 		JScrollPane scrollpane2 = new JScrollPane(table2);
 		scrollpane2.setBounds(150,300,470,41);
 		
@@ -98,7 +90,6 @@ public class TaskPersonalPage implements ActionListener{
 		panel.add(category3);
 		panel.add(category4);
 		panel.add(text1);
-//		panel.add(scrollpane1);
 		panel.add(scrollpane2);
 		panel.add(attend);
 		panel.add(leave);
@@ -142,7 +133,7 @@ public class TaskPersonalPage implements ActionListener{
 	}
 	
 	public void makeTable1() throws SQLException{
-		int day2 = 1;
+		int day2 = 3;
 		for(int i=1; i<=7; i++) {
 			String attend_time = "";
 			String leave_time = "";
@@ -295,36 +286,10 @@ public class TaskPersonalPage implements ActionListener{
 		rs.next();
 		
 	}
-	
-	public void makenewTable() throws SQLException{
-		int day2 = 1;
-		for(int i=1; i<=7; i++) {
-			String attend_time = "";
-			String leave_time = "";
-				String sqlStr = "SELECT daily_attend_time, daily_leave_time FROM daily_status"
-				+ " WHERE staff_id='"+staff_id+"' and daily_date='2018-12-"+ day2 +"'";	
-				PreparedStatement stmt = connection.prepareStatement(sqlStr);
-				ResultSet rs = stmt.executeQuery();
-				System.out.println(sqlStr);
-				
-				while(rs.next()) {
-					attend_time += rs.getString("daily_attend_time");
-					leave_time += rs.getString("daily_leave_time");
-				}
-				System.out.println("attend_time : " + attend_time);
-				
-				contents1[0][i] = attend_time;
-				contents1[1][i] = leave_time;
-				rs.next();	
-				
-				day2=day2+1;
-			}
-	}
 
 	public static void main(String[] args) {
 		new TaskPersonalPage();
 	}
-
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==attend) {
@@ -341,17 +306,56 @@ public class TaskPersonalPage implements ActionListener{
 				se.printStackTrace();
 			}			
 		}
-		else if(e.getSource()==Update) {
+		else if(e.getSource()==showAttendance) {
+			System.out.println("show tables");
+			
+			JFrame table = new JFrame("Attendance of this week");
+			
+			table.setVisible(true);
+			
+			contents1[0][0] = "Attend";
+			contents1[1][0] = "Leave";
+			
 			try {
-				System.out.println("Update");
-				makenewTable();
-				//makeTable1();	
-				//table1 = new JTable(contents1, days1);
-			}catch(SQLException se){
-				se.printStackTrace();
+				int day = 1;
+				for(int i=1; i<=7; i++) {
+					String attend_time = "";
+					String leave_time = "";
+						String sqlStr = "SELECT daily_attend_time, daily_leave_time FROM daily_status"
+						+ " WHERE staff_id='"+staff_id+"' and daily_date='2018-12-"+ day +"'";	
+						PreparedStatement stmt = connection.prepareStatement(sqlStr);
+						ResultSet rs = stmt.executeQuery();
+						System.out.println(sqlStr);
+						
+						while(rs.next()) {
+							attend_time += rs.getString("daily_attend_time");
+							leave_time += rs.getString("daily_leave_time");
+						}
+						System.out.println("attend_time : " + attend_time);
+						
+						contents1[0][i] = attend_time;
+						contents1[1][i] = leave_time;
+						rs.next();	
+						
+						day=day+1;
+					}
+				
+			}catch(SQLException e3){
+				e3.printStackTrace();
 			}
+			
+			DefaultTableModel model1 = new DefaultTableModel(contents1, days1);
+			JTable table1 = new JTable(model1);
+			
+			table1.setEnabled(false);
+			JScrollPane scrollpane1 = new JScrollPane(table1);
+			scrollpane1.setBounds(150,93,470,57);
+			
+			table.add(scrollpane1);
+			table.setSize(800, 600);
+			table.setVisible(true);
+			
 		}
-		
 	}
 }
 
