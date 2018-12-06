@@ -1,8 +1,7 @@
 package TaskPersonalPage;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -12,7 +11,7 @@ import java.text.SimpleDateFormat;
 public class TaskPersonalPage implements ActionListener{
 	
 	Connection connection=null;
-	int staff_id = 18020001; //Bring staff_ID which is logged in
+	int staff_id = 18020002; //Bring staff_id which is logged in
 	
 	private JFrame frame = new JFrame();
 	private JLabel hello = new JLabel();
@@ -36,8 +35,7 @@ public class TaskPersonalPage implements ActionListener{
 	
 	JTable table2 ;
 	String days1[] = {" ", "3", "4", "5", "6", "7", "8", "9"};
-	String days2[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"};
-	
+	String days2[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"};	
 	
 	public TaskPersonalPage() {
 		
@@ -72,17 +70,20 @@ public class TaskPersonalPage implements ActionListener{
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		
-		
+				
 		table2 = new JTable(contents2, days2);
-		
-		
 		table2.setEnabled(false);
-
 		JScrollPane scrollpane2 = new JScrollPane(table2);
 		scrollpane2.setBounds(150,300,470,41);
 		
 		
+		DefaultTableCellRenderer TableCellRenderer = new DefaultTableCellRenderer();
+		TableCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		TableColumnModel table1column = table2.getColumnModel();
+		for (int i = 0; i < table1column.getColumnCount(); i++) {
+			table1column.getColumn(i).setCellRenderer(TableCellRenderer);
+		}
+				
 		panel.add(title);
 		panel.add(hello);
 		panel.add(category1);
@@ -189,17 +190,13 @@ public class TaskPersonalPage implements ActionListener{
 	public void showCount() throws SQLException{
 		
 		String specification = "";
-		
 		String sqlStr = "SELECT late_count FROM status WHERE staff_id='"+staff_id+"'";
 		PreparedStatement stmt = connection.prepareStatement(sqlStr);
 		ResultSet rs = stmt.executeQuery();
-		
 		while(rs.next()) {
 			specification += rs.getString("late_count");
 		}
-		
 		text1.setText(specification);
-		
 		rs.next();
 		
 	}
@@ -315,9 +312,6 @@ public class TaskPersonalPage implements ActionListener{
 						rs.next();
 						day=day+1;
 						}
-						
-						
-				
 			}catch(SQLException e3){
 				e3.printStackTrace();
 			}
@@ -327,10 +321,16 @@ public class TaskPersonalPage implements ActionListener{
 			
 			table1.setEnabled(false);
 			JScrollPane scrollpane1 = new JScrollPane(table1);
-			//scrollpane1.setBounds(150,93,470,57);
+						
+			DefaultTableCellRenderer TableCellRenderer = new DefaultTableCellRenderer();
+			TableCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+			TableColumnModel table1column = table1.getColumnModel();
+			for (int i = 0; i < table1column.getColumnCount(); i++) {
+				table1column.getColumn(i).setCellRenderer(TableCellRenderer);
+			}
 			
 			table.add(scrollpane1);
-			table.setSize(470, 120);
+			table.setSize(470, 104);
 			table.setVisible(true);
 			
 		}
