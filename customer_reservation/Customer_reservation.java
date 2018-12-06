@@ -36,6 +36,8 @@ public class Customer_reservation implements ActionListener {
 	ResultSet rs;
 	Connect connect;
 	
+	public JFrame option_frame = new JFrame();
+	
 	public JFrame frame = new JFrame();
 	private JPanel titlePanel = new JPanel();
 	private JPanel searchPanel = new JPanel();
@@ -62,7 +64,9 @@ public class Customer_reservation implements ActionListener {
 	int capacity;
 	int price;
 	String[][] value;
-	String s1;
+	String tempRoomNumber;
+	String tempAdult;
+	String tempChild;
 	
 	public Customer_reservation() throws SQLException {
 		connect = new Connect();
@@ -124,7 +128,7 @@ public class Customer_reservation implements ActionListener {
 		frame.add(titlePanel);
 		frame.add(searchPanel);
 		frame.add(listPanel);
-		frame.setVisible(true);
+		frame.setVisible(false);
 	}
 	
 	public static void main(String[] args) throws SQLException {
@@ -145,9 +149,15 @@ public class Customer_reservation implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if(e.getSource() == nextButton) {
-			Customer_reservation_option.roomNumber = s1;
-			System.out.println("ggggg");
-			System.out.println(s1);
+			Customer_reservation_option customer_reservation_option = new Customer_reservation_option();
+			Customer_reservation_option.roomNumber = tempRoomNumber;
+			Customer_reservation_option.checkInDate = checkInDate;
+			Customer_reservation_option.checkOutDate = checkOutDate;
+			Customer_reservation_option.adultNumber = Integer.parseInt((String) adultBox.getSelectedItem());
+			Customer_reservation_option.childNumber = Integer.parseInt((String) childBox.getSelectedItem());
+			option_frame = customer_reservation_option.frame;
+			frame.setVisible(false);
+			option_frame.setVisible(true);
 		}
 	}
     
@@ -157,7 +167,6 @@ public class Customer_reservation implements ActionListener {
 					+ " and room_number NOT IN ( SELECT DISTINCT room_id FROM room_reservation "
 					+ "WHERE ( date(check_in) <= date("+ checkInDate+ ") and date(check_out) > date("+ checkInDate+")) "
 					+ "or ( date(check_in) < date("+ checkOutDate+ ") and date(check_out) >= date("+ checkOutDate+ ")) )";
-
 
 			stmt = dbTest.prepareStatement(sqlStr);
 			rs = stmt.executeQuery(sqlStr);
@@ -213,7 +222,7 @@ public class Customer_reservation implements ActionListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 1) {
-					s1 = roomTable.getValueAt(roomTable.getSelectedRow(), 0).toString();
+					tempRoomNumber = roomTable.getValueAt(roomTable.getSelectedRow(), 0).toString();
 				}
 			}
 		});

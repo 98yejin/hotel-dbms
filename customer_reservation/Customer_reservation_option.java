@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,8 +19,10 @@ public class Customer_reservation_option implements ActionListener {
 	static Connection dbTest;
 	PreparedStatement stmt;
 	int rs;
+	ResultSet rs2;
 	Connect connect;
 	
+	public JFrame confirm_frame = new JFrame();
 	public JFrame frame = new JFrame();
 	private JPanel titlePanel = new JPanel();
 	private JPanel contentPanel = new JPanel();
@@ -36,11 +39,11 @@ public class Customer_reservation_option implements ActionListener {
 	private JButton minusButton2 = new JButton("-");
 	private JButton reservationButton = new JButton("예약하기");
 	int breakfastCount, extraBedCount;
-	static String checkInDate = "181127";
-	static String checkOutDate = "181129";
-	static String roomNumber = "311";
-	static int adultNumber = 1;
-	static int childNumber = 0; 
+	static String checkInDate;
+	static String checkOutDate;
+	static String roomNumber;
+	static int adultNumber;
+	static int childNumber; 
 	String etc;
 	int customerId = 9;
 	
@@ -137,7 +140,7 @@ public class Customer_reservation_option implements ActionListener {
 			extraBedCount = Integer.parseInt(extraBedInput.getText());
 			etc = etcInput.getText();
 			try {
-				String sqlStr = "Insert INTO room_reservation("
+				String sqlStr = "INSERT INTO room_reservation("
 						+ "num_of_adult, num_of_children, check_in, check_out, "
 						+ "breakfast, extra_bed, requirement, room_id, customer_id" 
 						+ ") VALUES("
@@ -149,9 +152,31 @@ public class Customer_reservation_option implements ActionListener {
 				rs = stmt.executeUpdate(sqlStr);
 				System.out.println(rs>0? "성공" : "실패");
 				stmt.close();
+				
+				String sqlStr2 = "SELECT max(id) FROM room_reservation";
+				stmt = dbTest.prepareStatement(sqlStr2);
+				rs2 = stmt.executeQuery(sqlStr2);
+				int tempReservationId = 1;
+				while (rs2.next()) {
+					tempReservationId = rs2.getInt("max(id)");
+				}
+				stmt.close();
+				rs2.close();
+				
+				Customer_confirm.reservationId = tempReservationId;
+				System.out.println(tempReservationId);
+				Customer_confirm.checkInDate = checkInDate;
+				Customer_confirm.checkOutDate = checkOutDate;
+				Customer_confirm customer_confirm = new Customer_confirm();
+				confirm_frame = customer_confirm.frame;
+				frame.setVisible(false);
+				confirm_frame.setVisible(true);
+				
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+			
+			
 		}
 	}
 	

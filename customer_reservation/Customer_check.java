@@ -24,6 +24,7 @@ public class Customer_check implements ActionListener{
 	ResultSet rs;
 	Connect connect;
 	
+	public JFrame main_frame = new JFrame();
 	public JFrame frame = new JFrame();
 	private JPanel titlePanel = new JPanel();
 	private JPanel contentPanel = new JPanel();
@@ -76,7 +77,7 @@ public class Customer_check implements ActionListener{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(titlePanel);
 		frame.add(contentPanel);
-		frame.setVisible(true);
+		frame.setVisible(false);
 		
 	}
 	
@@ -86,7 +87,15 @@ public class Customer_check implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == backButton) {
-			System.out.println("Pressed back");
+			try {
+				frame.setVisible(false);
+				Customer_main customer_main = new Customer_main();
+		    	main_frame = customer_main.frame;
+				main_frame.setVisible(true);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	
