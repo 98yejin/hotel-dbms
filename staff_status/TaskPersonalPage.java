@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class TaskPersonalPage implements ActionListener{
 	
 	Connection connection=null;
-	int staff_id = 18030003; //나중에 로그인 정보 받아와야 함
+	int staff_id = 18020001; //Bring staff_ID which is logged in
 	
 	private JFrame frame = new JFrame();
 	private JLabel hello = new JLabel();
@@ -35,7 +35,7 @@ public class TaskPersonalPage implements ActionListener{
 	
 	
 	JTable table2 ;
-	String days1[] = {" ", "1", "2", "3", "4", "5", "6", "7"};
+	String days1[] = {" ", "3", "4", "5", "6", "7", "8", "9"};
 	String days2[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun"};
 	
 	
@@ -132,31 +132,6 @@ public class TaskPersonalPage implements ActionListener{
 		rs.next();		
 	}
 	
-	public void makeTable1() throws SQLException{
-		int day2 = 3;
-		for(int i=1; i<=7; i++) {
-			String attend_time = "";
-			String leave_time = "";
-				String sqlStr = "SELECT daily_attend_time, daily_leave_time FROM daily_status"
-				+ " WHERE staff_id='"+staff_id+"' and daily_date='2018-12-"+ day2 +"'";	
-				PreparedStatement stmt = connection.prepareStatement(sqlStr);
-				ResultSet rs = stmt.executeQuery();
-				System.out.println(sqlStr);
-				
-				while(rs.next()) {
-					attend_time += rs.getString("daily_attend_time");
-					leave_time += rs.getString("daily_leave_time");
-				}
-				System.out.println("attend_time : " + attend_time);
-				
-				contents1[0][i] = attend_time;
-				contents1[1][i] = leave_time;
-				rs.next();	
-				
-				day2=day2+1;
-			}
-	}
-	
 	public void InputAttendTime() throws SQLException{
 		long time_s = System.currentTimeMillis();
 		SimpleDateFormat tmp_date = new SimpleDateFormat("yyyy-MM-dd");
@@ -168,7 +143,7 @@ public class TaskPersonalPage implements ActionListener{
 		
 		String sqlStr = "INSERT INTO daily_status VALUES ("
 		+staff_id+", '"+ date +"', '"+ time +"', NULL)";
-		System.out.println(sqlStr);
+		//System.out.println(sqlStr);
 		PreparedStatement stmt = connection.prepareStatement(sqlStr);
 		//insert data 출력 
 		stmt.executeUpdate(sqlStr);
@@ -273,7 +248,7 @@ public class TaskPersonalPage implements ActionListener{
 		+" FROM vacation WHERE staff_id='"+staff_id+"'";
 		PreparedStatement stmt = connection.prepareStatement(sqlStr);
 		ResultSet rs = stmt.executeQuery();
-		System.out.println(sqlStr);
+		//System.out.println(sqlStr);
 		
 		while(rs.next()) {
 			start_date += rs.getString("start_date");
@@ -317,7 +292,7 @@ public class TaskPersonalPage implements ActionListener{
 			contents1[1][0] = "Leave";
 			
 			try {
-				int day = 1;
+				int day = 3;
 				for(int i=1; i<=7; i++) {
 					String attend_time = "";
 					String leave_time = "";
@@ -325,20 +300,23 @@ public class TaskPersonalPage implements ActionListener{
 						+ " WHERE staff_id='"+staff_id+"' and daily_date='2018-12-"+ day +"'";	
 						PreparedStatement stmt = connection.prepareStatement(sqlStr);
 						ResultSet rs = stmt.executeQuery();
-						System.out.println(sqlStr);
+						//System.out.println(sqlStr);
 						
 						while(rs.next()) {
 							attend_time += rs.getString("daily_attend_time");
 							leave_time += rs.getString("daily_leave_time");
 						}
-						System.out.println("attend_time : " + attend_time);
-						
 						contents1[0][i] = attend_time;
-						contents1[1][i] = leave_time;
-						rs.next();	
+						if (leave_time.equals("null")) {
+							contents1[1][i] = " ";
+							}
+						else { contents1[1][i] = leave_time; }
 						
+						rs.next();
 						day=day+1;
-					}
+						}
+						
+						
 				
 			}catch(SQLException e3){
 				e3.printStackTrace();
@@ -349,10 +327,10 @@ public class TaskPersonalPage implements ActionListener{
 			
 			table1.setEnabled(false);
 			JScrollPane scrollpane1 = new JScrollPane(table1);
-			scrollpane1.setBounds(150,93,470,57);
+			//scrollpane1.setBounds(150,93,470,57);
 			
 			table.add(scrollpane1);
-			table.setSize(800, 600);
+			table.setSize(470, 120);
 			table.setVisible(true);
 			
 		}
