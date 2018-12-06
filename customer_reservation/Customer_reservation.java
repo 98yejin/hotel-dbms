@@ -17,11 +17,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -42,7 +44,6 @@ public class Customer_reservation implements ActionListener {
 	private JPanel titlePanel = new JPanel();
 	private JPanel searchPanel = new JPanel();
 	private JPanel listPanel = new JPanel();
-	private JLabel mainLabel = new JLabel("예약");
 	private JLabel checkInLabel = new JLabel("체크인");
 	private JLabel checkOutLabel = new JLabel("체크아웃");
 	private JLabel adultLabel = new JLabel("성인");
@@ -53,6 +54,8 @@ public class Customer_reservation implements ActionListener {
 	private JTextField checkOutInput = new JTextField();
 	private JComboBox<String> adultBox = new JComboBox<String>();
 	private JComboBox<String> childBox = new JComboBox<String>();
+	JLabel backImage = new JLabel();
+	JLayeredPane layeredPane = new JLayeredPane();
 	
 	int customerCount = 0;
 	String checkInDate;
@@ -69,6 +72,11 @@ public class Customer_reservation implements ActionListener {
 	String tempChild;
 	
 	public Customer_reservation() throws SQLException {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/reservation_back.png"));
+		backImage.setBounds(0,0,800,600);
+		layeredPane.setBounds(0,0,800,600);
+		layeredPane.setLayout(null);
+		
 		connect = new Connect();
 		
 		titlePanel.setLayout(null);
@@ -80,23 +88,32 @@ public class Customer_reservation implements ActionListener {
 		listPanel.setLayout(null); 
 		listPanel.setBounds(0, 220, 800, 600);
 		
-		mainLabel.setBounds(40, 20, 60, 50);
-		mainLabel.setFont(new Font("Courier", Font.BOLD, 30));
 		checkInLabel.setBounds(50, 50, 60, 30);
 		checkInLabel.setFont(new Font("Courier", Font.PLAIN, 15));
+		
 		checkInInput.setBounds(90,50,100,30);
+		checkInInput.setOpaque(false);
+		checkInInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		
 		checkOutLabel.setBounds(200, 50, 60, 30);
 		checkOutLabel.setFont(new Font("Courier", Font.PLAIN, 15));
+		
 		checkOutInput.setBounds(255,50,100,30);
+		checkOutInput.setOpaque(false);
+		checkOutInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		
 		adultLabel.setBounds(380, 50, 40, 30);    
 		adultLabel.setFont(new Font("Courier", Font.PLAIN, 15));
 		adultBox.setBounds(430,50,60,30);
+		
 		childLabel.setBounds(530, 50, 60, 30);
 		childLabel.setFont(new Font("Courier", Font.PLAIN, 15));
 		childBox.setBounds(580,50,60,30);
 		searchButton.setBounds(670, 40, 80, 40);
+//		searchButton.setBorderPainted(false);
+//		searchButton.setFocusPainted(false);
+//		searchButton.setContentAreaFilled(false);
+
 		nextButton.setBounds(600, 480, 100, 40);
 		
 		adultBox.addItem("1");
@@ -108,7 +125,6 @@ public class Customer_reservation implements ActionListener {
 		searchButton.addActionListener(this);
 		nextButton.addActionListener(this);
 		
-		titlePanel.add(mainLabel);
 		searchPanel.add(checkInLabel);
 		searchPanel.add(checkInInput);
 		searchPanel.add(checkOutLabel);
@@ -118,10 +134,13 @@ public class Customer_reservation implements ActionListener {
 		searchPanel.add(searchButton);
 		searchPanel.add(adultBox);
 		searchPanel.add(childBox);
+		searchPanel.setOpaque(false);
 		
 		listPanel.add(nextButton);
 		listPanel.setVisible(false);
-		
+		listPanel.setOpaque(false);
+
+		//frame.add(backImage);
 		frame.setTitle("My Page - Customer - Reservation");
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
