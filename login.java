@@ -98,7 +98,7 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	static String status;				// 받아온 id의 상태(직원 id인가? 고객 id인가?)
 
 
-	public ImageTest() { // 메인화면(스태프,고객구분)
+	public login() { // 메인화면(스태프,고객구분)
 		connectDB(); // 처음에 메인화면(고객, 직원선택) 창을 띄우고, 이 때 DB를 연결해둠
 		Image img = null;
 		mainpanel.setLayout(null);
