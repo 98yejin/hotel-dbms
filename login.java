@@ -1,11 +1,18 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.awt.Color;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,36 +26,17 @@ import javax.swing.JTextField;
 public class login implements ActionListener { // cus~는 고객전용, sta~는 직원전용이다.
 	private JFrame cusloginframe = new JFrame();						// 고객 로그인창 프레임
 	private JPanel cusloginpanel = new JPanel();						// 고객 로그인창 패널
-	private JLabel cusloginLabel = new JLabel("LOG-IN");				// 고객 로그인창 제목(창의 이름)
-	private JLabel cusidLabel = new JLabel("ID");						// 고객 로그인창 ID (텍스트)
-	private JLabel cuspwdLabel = new JLabel("PASSWORD");				// 고객 로그인창 PW (텍스트)
 	private JTextField cusidInput = new JTextField();					// 고객 로그인창 ID 입력필드
 	private JPasswordField cuspwdInput = new JPasswordField();			// 고객 로그인창 PW 입력필드
-	private JButton cusloginButton = new JButton("LOGIN");				// 고객 로그인창 로그인버튼
-	private JButton cusjoinButton = new JButton("REGIST");				// 고객 로그인창 회원가입 버튼
-	private JButton cusforgotButton = new JButton("LOST ID/PW?");		// 고객 로그인창 계정찾기 버튼
+	private JButton cusloginButton = new JButton();				// 고객 로그인창 로그인버튼
+	private JButton cusjoinButton = new JButton();				// 고객 로그인창 회원가입 버튼
+	private JButton cusforgotButton = new JButton();		// 고객 로그인창 계정찾기 버튼
 	
 	// 이상 고객 로그인 //
 	
 	private JFrame cusjoinframe = new JFrame();							// 고객 회원가입창 플임
 	private JPanel cusjoinpanel = new JPanel();							// 고객 회원가입창 패널
-	private JLabel cusjoinLabel = new JLabel("REGISTRATION");			// 고객 회원가입창 제목
-	private JLabel cusjoinidLabel = new JLabel("* ID");					// 이하 고객 회원가입창 텍스트
-	private JLabel cusjoinpwdLabel = new JLabel("* PASSWORD");
-	private JLabel cusjoinconfLabel = new JLabel("* CONFIRM");
-	private JLabel cusjoinfnameLabel = new JLabel("* FIRST NAME");
-	private JLabel cusjoinlnameLabel = new JLabel("* LAST NAME");
-	private JLabel cusjoincphoneLabel = new JLabel("* CELL PHONE");
-	private JLabel cusjointphoneLabel = new JLabel("TEMP PHONE");
-	private JLabel cusjoinbirthLabel = new JLabel("* BIRTHDAY");
-	private JLabel cusjoinmsgLabel = new JLabel("Must INPUT data on *."); // 여기서부터는 알림문구
-	private JLabel cusjoinidcau = new JLabel("ID는 10자 이하");
-	private JLabel cusjoinpwdcau = new JLabel("비밀번호는 20자 이하");
-	private JLabel cusjoinconfcau = new JLabel("비밀번호와 일치시켜주세요.");
-	private JLabel cusjoinfnamecau = new JLabel("성은 25자 이하");
-	private JLabel cusjoinlnamecau = new JLabel("이름은 25자 이하");
-	private JLabel cusjoinphonecau = new JLabel("전화번호는 - 없이 11자리");
-	private JLabel cusjoinbirthcau = new JLabel("생년월일은 기호없이 6자리");
+	
 	
 	private JTextField cusjoinidInput = new JTextField(); // 여기서부터는 고객 회원가입창 입력칸
 	private JPasswordField cusjoinpwdInput = new JPasswordField();
@@ -58,58 +46,49 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	private JTextField cusjoincphoneInput = new JTextField();
 	private JTextField cusjointphoneInput = new JTextField();
 	private JTextField cusjoinbirthInput = new JTextField();
-	private JButton cusregistButton = new JButton("REGIST"); // 고객 회원가입창 가입하기 버튼
-	private JButton cusjoincancelButton = new JButton("CANCEL"); // 고객 회원가입창 취소(닫기) 버튼
+	private JButton cusregistButton = new JButton(); // 고객 회원가입창 가입하기 버튼
+	private JButton cusjoincancelButton = new JButton(); // 고객 회원가입창 취소(닫기) 버튼
 	// 이상 고객 회원가입 //
 	
 	private JFrame cusforgotframe = new JFrame(); 							// 고객 정보찾기창 프레임
 	private JPanel cusforgotpanel = new JPanel();							// 고객 정보찾기창 패널
-	private JLabel cusforgotlabel = new JLabel("FIND ID/PW");				// 고객 정보찾기창 제목
-	private JLabel cusforgotfnamelabel = new JLabel("FIRST NAME");			// 고객 정보찾기창 라벨 (이하 2개 더)
-	private JLabel cusforgotlnamelabel = new JLabel("LAST NAME");
-	private JLabel cusforgotcphonelabel = new JLabel("CELL PHONE NUM");
+
 	
 	private JTextField cusforgotfnameInput = new JTextField();				// 고객 정보찾기창 입력칸(이하 2개 더)
 	private JTextField cusforgotlnameInput = new JTextField();
 	private JTextField cusforgotcphoneInput = new JTextField();
-	private JButton cusfindButton = new JButton("FIND");					// 고객 정보찾기창 찾기버튼
-	private JButton cusfindcancelButton = new JButton("CANCEL");			// 고객 정보찾기창 취소(닫기)버튼
+	private JButton cusfindButton = new JButton();					// 고객 정보찾기창 찾기버튼
+	private JButton cusfindcancelButton = new JButton();			// 고객 정보찾기창 취소(닫기)버튼
 	// 이상 ID/PW찾기 //
 	
 	// 이상 고객 //
 	
 	private JFrame mainframe = new JFrame();								// 첫 실행화면(고객, 직원 선택)
 	private JPanel mainpanel = new JPanel();
-	private JButton selcus = new JButton("CUSTOMER LOGIN");					// 누르면 고객로그인 열림
-	private JButton selsta = new JButton("STAFF LOGIN");					// 누르면 직원로그인 열림
+	private JButton selcus = new JButton();					// 누르면 고객로그인 열림
+	private JButton selsta = new JButton();					// 누르면 직원로그인 열림
 	
 	// 이상 메인 //
 	
 	private JFrame staloginframe = new JFrame();							// 이하 구성은 고객과 동일함
 	private JPanel staloginpanel = new JPanel();
-	private JLabel staloginLabel = new JLabel("LOG-IN");
-	private JLabel staidLabel = new JLabel("ID");
-	private JLabel stapwdLabel = new JLabel("PASSWORD");
+	
 	private JTextField staidInput = new JTextField();
 	private JPasswordField stapwdInput = new JPasswordField();
-	private JButton staloginButton = new JButton("LOGIN");
-	private JButton staforgotButton = new JButton("LOST PW?");
+	private JButton staloginButton = new JButton();
+	private JButton staforgotButton = new JButton();
 	
 	// 이상 로그인 //
 	
 	private JFrame staforgotframe = new JFrame();
 	private JPanel staforgotpanel = new JPanel();
-	private JLabel staforgotlabel = new JLabel("FIND PW");					// 직원은 ID를 항상 앙고 있다고 가정하고(ID카드 등) 비밀번호만 검색
-	private JLabel staforgotidlabel = new JLabel("ID");						// 이상의 이유와 보안상의 이유로 직원은 ID도 요구
-	private JLabel staforgotfnamelabel = new JLabel("FIRST NAME");
-	private JLabel staforgotlnamelabel = new JLabel("LAST NAME");
-	private JLabel staforgotcphonelabel = new JLabel("CELL PHONE NUM");
+
 	private JTextField staforgotidInput = new JTextField();
 	private JTextField staforgotfnameInput = new JTextField();
 	private JTextField staforgotlnameInput = new JTextField();
 	private JTextField staforgotcphoneInput = new JTextField();
-	private JButton stafindButton = new JButton("FIND");
-	private JButton stafindcancelButton = new JButton("CANCEL");
+	private JButton stafindButton = new JButton();
+	private JButton stafindcancelButton = new JButton();
 	// 이상 PW찾기 //
 	
 	// 이상 직원 //
@@ -119,22 +98,40 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	static String status;				// 받아온 id의 상태(직원 id인가? 고객 id인가?)
 
 
-	public login() { // 메인화면(스태프,고객구분)
+	public ImageTest() { // 메인화면(스태프,고객구분)
 		connectDB(); // 처음에 메인화면(고객, 직원선택) 창을 띄우고, 이 때 DB를 연결해둠
-		
+		Image img = null;
 		mainpanel.setLayout(null);
-		selcus.setBounds(20,20,360,500);
-		selsta.setBounds(400,20,360,500);
+		selcus.setBounds(69,100,300,430);
+		selsta.setBounds(429,100,300,430);
+		selcus.setBorderPainted(false);
+		selcus.setFocusPainted(false);
+		selcus.setContentAreaFilled(false);
+		selsta.setBorderPainted(false);
+		selsta.setFocusPainted(false);
+		selsta.setContentAreaFilled(false);
+		
 		
 		mainpanel.add(selcus);
 		mainpanel.add(selsta);
 		selcus.addActionListener(this);
 		selsta.addActionListener(this);
 		
+		try{ // URL로 이미지 받아오기
+			File sourceimage = new File("c:\\KakaoTalk_20181206_185919117.png");
+			img = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			System.out.println("Image Loading Fail");
+		}
+		
+		JLabel imgLabel = new JLabel(new ImageIcon(img));
+		imgLabel.setBounds(0,0,800,600);
+		mainpanel.add(imgLabel); // 이미지 집어넣기
+		
 		mainframe.add(mainpanel);
 		
 		mainframe.setTitle("SELECT POSITION");  					// 프레임 상단이름
-		mainframe.setSize(800,600);  								// 프레임 크기
+		mainframe.setSize(815,638);  								// 프레임 크기
 		mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   // 종료시 System.exit() 호출
 		mainframe.setVisible(true);
 		
@@ -142,25 +139,48 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	
 	private void customerlogin() { // 고객로그인
 		
+		Image img = null;
+		Color color1 = new Color(0xD2958B);
 		cusloginpanel.setLayout(null);	
 		// component위치지정
-		cusloginLabel.setBounds(370,105,60,50);
-		cusidLabel.setBounds(255,165,90,30);
-		cuspwdLabel.setBounds(255,215,90,30);
-		cusidInput.setBounds(335,165,90,30);
-		cuspwdInput.setBounds(335,215,90,30);
-		cusloginButton.setBounds(445,165,80,70);
-		cusjoinButton.setBounds(265,265,110,30);
-		cusforgotButton.setBounds(405,265,110,30);
+		
+		cusidInput.setBounds(338,191,87,20);
+		cuspwdInput.setBounds(338,239,87,20);
+		cusloginButton.setBounds(448,185,74,72);
+		cusjoinButton.setBounds(273,290,98,20);
+		cusforgotButton.setBounds(413,290,98,20);
+		cusidInput.setBackground(color1); // 투명하니 선택이 불가능해져서 색상을 입힘
+		cusidInput.setBorder(javax.swing.BorderFactory.createEmptyBorder()); // 테두리 투명하게
+		cuspwdInput.setBackground(color1);
+		cuspwdInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusloginButton.setBorderPainted(false);
+		cusloginButton.setFocusPainted(false);
+		cusloginButton.setContentAreaFilled(false);
+		cusjoinButton.setBorderPainted(false);
+		cusjoinButton.setFocusPainted(false);
+		cusjoinButton.setContentAreaFilled(false);
+		cusforgotButton.setBorderPainted(false);
+		cusforgotButton.setFocusPainted(false);
+		cusforgotButton.setContentAreaFilled(false);
+		
 		// 버튼에 ActionListener 연결
 		cusloginButton.addActionListener(this);
 		cusjoinButton.addActionListener(this);
 		cusforgotButton.addActionListener(this);
 		
+		try{ // URL로 이미지 받아오기
+			File sourceimage = new File("c:\\KakaoTalk_20181206_185919105.png");
+			img = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			System.out.println("Image Loading Fail");
+		}
+		
+		JLabel imgLabel = new JLabel(new ImageIcon(img));
+		imgLabel.setBounds(0,0,800,600);
+		cusloginpanel.add(imgLabel); // 이미지 집어넣기
+		
 		// component panel에추가
-		cusloginpanel.add(cusloginLabel);
-		cusloginpanel.add(cusidLabel);
-		cusloginpanel.add(cuspwdLabel);
+	
 		cusloginpanel.add(cusidInput);
 		cusloginpanel.add(cuspwdInput);
 		cusloginpanel.add(cusloginButton);
@@ -170,7 +190,7 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 		cusloginframe.add(cusloginpanel);
 		
 		cusloginframe.setTitle("CUSTOMER LOGIN");  					// 프레임 상단이름
-		cusloginframe.setSize(800,600);  								// 프레임 크기
+		cusloginframe.setSize(815,638);  								// 프레임 크기
 		cusloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // 종료시 고객 로그인 창만 닫음.
 		cusloginframe.setVisible(true);	// frame 화면에 표시
 		
@@ -233,59 +253,57 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	}
 
 	private void customerJoin() { // 고객회원가입
-		
+		Image img = null;
+		Color color1 = new Color(0xDDC6C3);
 		cusjoinpanel.setLayout(null);
-		cusjoinLabel.setBounds(350,0,100,40);
-		cusjoinidLabel.setBounds(200,55,110,35);
-		cusjoinpwdLabel.setBounds(200,105,110,35);
-		cusjoinconfLabel.setBounds(200,155,110,35);
-		cusjoinfnameLabel.setBounds(200,205,110,35);
-		cusjoinlnameLabel.setBounds(200,255,110,35);
-		cusjoincphoneLabel.setBounds(200,305,110,35);
-		cusjointphoneLabel.setBounds(200,355,110,35);
-		cusjoinbirthLabel.setBounds(200,405,110,35);
-		cusjoinmsgLabel.setBounds(200,455,230,35);
+	
+		cusjoinidInput.setBounds(312,86,176,25);
+		cusjoinpwdInput.setBounds(312,132,176,25);
+		cusjoinconfInput.setBounds(312,185,176,25);
+		cusjoinfnameInput.setBounds(312,237,176,25);
+		cusjoinlnameInput.setBounds(312,289,176,25);
+		cusjoincphoneInput.setBounds(312,336,176,25);
+		cusjointphoneInput.setBounds(312,385,176,25);
+		cusjoinbirthInput.setBounds(312,435,176,25);
 		
-		cusjoinidcau.setBounds(520,55,200,35);
-		cusjoinpwdcau.setBounds(520,105,200,35);
-		cusjoinconfcau.setBounds(520,155,200,35);
-		cusjoinfnamecau.setBounds(520,205,200,35);
-		cusjoinlnamecau.setBounds(520,255,200,35);
-		cusjoinphonecau.setBounds(520,330,200,35);
-		cusjoinbirthcau.setBounds(520,405,200,35);
-
-		cusjoinidInput.setBounds(300,55,200,35);
-		cusjoinpwdInput.setBounds(300,105,200,35);
-		cusjoinconfInput.setBounds(300,155,200,35);
-		cusjoinfnameInput.setBounds(300,205,200,35);
-		cusjoinlnameInput.setBounds(300,255,200,35);
-		cusjoincphoneInput.setBounds(300,305,200,35);
-		cusjointphoneInput.setBounds(300,355,200,35);
-		cusjoinbirthInput.setBounds(300,405,200,35);
-
-		cusregistButton.setBounds(300,500,90,40);
-		cusjoincancelButton.setBounds(410,500,90,40);
+		cusregistButton.setBounds(305,530,80,30);
+		cusjoincancelButton.setBounds(414,530,80,30);
 		cusregistButton.addActionListener(this);
 		cusjoincancelButton.addActionListener(this);
 		
-		cusjoinpanel.add(cusjoinLabel);
-		cusjoinpanel.add(cusjoinidLabel);
-		cusjoinpanel.add(cusjoinpwdLabel);
-		cusjoinpanel.add(cusjoinconfLabel);
-		cusjoinpanel.add(cusjoinfnameLabel);
-		cusjoinpanel.add(cusjoinlnameLabel);
-		cusjoinpanel.add(cusjoincphoneLabel);
-		cusjoinpanel.add(cusjointphoneLabel);
-		cusjoinpanel.add(cusjoinbirthLabel);
-		cusjoinpanel.add(cusjoinmsgLabel);
+		cusjoinidInput.setBackground(color1); // 투명하니 선택이 불가능해져서 색상을 입힘
+		cusjoinidInput.setBorder(javax.swing.BorderFactory.createEmptyBorder()); // 테두리 투명하게
+		cusjoinpwdInput.setBackground(color1);
+		cusjoinpwdInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusjoinconfInput.setBackground(color1);
+		cusjoinconfInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusjoinfnameInput.setBackground(color1);
+		cusjoinfnameInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusjoinlnameInput.setBackground(color1);
+		cusjoinlnameInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusjoincphoneInput.setBackground(color1);
+		cusjoincphoneInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusjointphoneInput.setBackground(color1);
+		cusjointphoneInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusjoinbirthInput.setBackground(color1);
+		cusjoinbirthInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusregistButton.setBorderPainted(false);
+		cusregistButton.setFocusPainted(false);
+		cusregistButton.setContentAreaFilled(false);
+		cusjoincancelButton.setBorderPainted(false);
+		cusjoincancelButton.setFocusPainted(false);
+		cusjoincancelButton.setContentAreaFilled(false);
 		
-		cusjoinpanel.add(cusjoinidcau);
-		cusjoinpanel.add(cusjoinpwdcau);
-		cusjoinpanel.add(cusjoinconfcau);
-		cusjoinpanel.add(cusjoinfnamecau);
-		cusjoinpanel.add(cusjoinlnamecau);
-		cusjoinpanel.add(cusjoinphonecau);
-		cusjoinpanel.add(cusjoinbirthcau);
+		try{ // URL로 이미지 받아오기
+			File sourceimage = new File("c:\\KakaoTalk_20181206_192522806.png");
+			img = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			System.out.println("Image Loading Fail");
+		}
+		
+		JLabel imgLabel = new JLabel(new ImageIcon(img));
+		imgLabel.setBounds(0,0,800,600);
+		cusjoinpanel.add(imgLabel); // 이미지 집어넣기
 		
 		cusjoinpanel.add(cusjoinidInput);
 		cusjoinpanel.add(cusjoinpwdInput);
@@ -301,7 +319,7 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 		
 		cusjoinframe.add(cusjoinpanel);
 		cusjoinframe.setTitle("JOIN");
-		cusjoinframe.setSize(800,600);
+		cusjoinframe.setSize(815,638);
 		cusjoinframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		cusjoinframe.setVisible(true);	
 		
@@ -376,35 +394,53 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	}
 	
 	private void customerForgot() { // 고객정보찾기
+		Image img = null;
+		Color color1 = new Color(0xD2958B);
+		
 		cusforgotpanel.setLayout(null);
-		cusforgotlabel.setBounds(370,105,120,50);
-		cusforgotfnamelabel.setBounds(255,165,120,30);
-		cusforgotlnamelabel.setBounds(255,215,120,30);
-		cusforgotcphonelabel.setBounds(255,265,120,30);
 		
-		cusforgotfnameInput.setBounds(365,165,120,30);
-		cusforgotlnameInput.setBounds(365,215,120,30);
-		cusforgotcphoneInput.setBounds(365,265,120,30);
+		cusforgotfnameInput.setBounds(378,199,92,21);
+		cusforgotlnameInput.setBounds(378,244,92,21);
+		cusforgotcphoneInput.setBounds(378,289,92,21);
 		
-		cusfindButton.setBounds(265,315,110,30);
-		cusfindcancelButton.setBounds(405,315,100,30);
+		cusfindButton.setBounds(275,344,75,24);
+		cusfindcancelButton.setBounds(411,344,74,24);
 		cusfindButton.addActionListener(this);
 		cusfindcancelButton.addActionListener(this);
 		
-		cusforgotpanel.add(cusforgotlabel);
-		cusforgotpanel.add(cusforgotfnamelabel);
-		cusforgotpanel.add(cusforgotlnamelabel);
-		cusforgotpanel.add(cusforgotcphonelabel);
+		cusforgotfnameInput.setBackground(color1);
+		cusforgotfnameInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusforgotlnameInput.setBackground(color1);
+		cusforgotlnameInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusforgotcphoneInput.setBackground(color1);
+		cusforgotcphoneInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		cusfindButton.setBorderPainted(false);
+		cusfindButton.setFocusPainted(false);
+		cusfindButton.setContentAreaFilled(false);
+		cusfindcancelButton.setBorderPainted(false);
+		cusfindcancelButton.setFocusPainted(false);
+		cusfindcancelButton.setContentAreaFilled(false);
+		
+		try{ // URL로 이미지 받아오기
+			File sourceimage = new File("c:\\KakaoTalk_20181206_201111181.png");
+			img = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			System.out.println("Image Loading Fail");
+		}
+		
+		JLabel imgLabel = new JLabel(new ImageIcon(img));
+		imgLabel.setBounds(0,0,800,600);
+		cusforgotpanel.add(imgLabel); // 이미지 집어넣기
+		
 		cusforgotpanel.add(cusforgotfnameInput);
 		cusforgotpanel.add(cusforgotlnameInput);
 		cusforgotpanel.add(cusforgotcphoneInput);
 		cusforgotpanel.add(cusfindButton);
 		cusforgotpanel.add(cusfindcancelButton);
 		
-		
 		cusforgotframe.add(cusforgotpanel);
 		cusforgotframe.setTitle("FIND ID/PW");
-		cusforgotframe.setSize(800,600);
+		cusforgotframe.setSize(815,638);
 		cusforgotframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		cusforgotframe.setVisible(true);	
 	}
@@ -456,23 +492,44 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	}
 	
 	private void stafflogin() { // 직원로그인
+		
+		Image img = null;
+		Color color1 = new Color(0xD2958B);
 		staloginpanel.setLayout(null);	
 		// component위치지정
-		staloginLabel.setBounds(370,105,60,50);
-		staidLabel.setBounds(255,165,90,30);
-		stapwdLabel.setBounds(255,215,90,30);
-		staidInput.setBounds(335,165,90,30);
-		stapwdInput.setBounds(335,215,90,30);
-		staloginButton.setBounds(445,165,100,30);
-		staforgotButton.setBounds(445,215,100,30);
+		
+		staidInput.setBounds(338,191,88,20);
+		stapwdInput.setBounds(338,239,88,20);
+		staloginButton.setBounds(461,187,70,28);
+		staforgotButton.setBounds(461,234,70,28);
+		staidInput.setBackground(color1); // Textinput가 투명하면 선택이 불가능해져서 색상을 입힘
+		staidInput.setBorder(javax.swing.BorderFactory.createEmptyBorder()); // 테두리 투명하게
+		stapwdInput.setBackground(color1);
+		stapwdInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		staloginButton.setBorderPainted(false); // 이하 3개가 한개 버튼 투명하게만듬 
+		staloginButton.setFocusPainted(false);
+		staloginButton.setContentAreaFilled(false);
+		staforgotButton.setBorderPainted(false);
+		staforgotButton.setFocusPainted(false);
+		staforgotButton.setContentAreaFilled(false);
+		
 		// 버튼에 ActionListener 연결
 		staloginButton.addActionListener(this);
 		staforgotButton.addActionListener(this);
 		
+		try{ // URL로 이미지 받아오기
+			File sourceimage = new File("c:\\KakaoTalk_20181206_185919118.png");
+			img = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			System.out.println("Image Loading Fail");
+		}
+		
+		JLabel imgLabel = new JLabel(new ImageIcon(img));
+		imgLabel.setBounds(0,0,800,600);
+		staloginpanel.add(imgLabel); // 이미지 집어넣기
+		
 		// component panel에추가
-		staloginpanel.add(staloginLabel);
-		staloginpanel.add(staidLabel);
-		staloginpanel.add(stapwdLabel);
+		
 		staloginpanel.add(staidInput);
 		staloginpanel.add(stapwdInput);
 		staloginpanel.add(staloginButton);
@@ -481,7 +538,7 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 		staloginframe.add(staloginpanel);
 		
 		staloginframe.setTitle("STAFF LOGIN");  					// 프레임 상단이름
-		staloginframe.setSize(800,600);  								// 프레임 크기
+		staloginframe.setSize(815,638);  								// 프레임 크기
 		staloginframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   // 
 		staloginframe.setVisible(true);
 		
@@ -544,28 +601,47 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 	}
 	
 	private void staffForgot() { // 직원정보찾기
+		Image img = null;
+		Color color1 = new Color(0xD2958B);
+		
 		staforgotpanel.setLayout(null);
-		staforgotlabel.setBounds(370,105,120,50);
-		staforgotidlabel.setBounds(255,165,120,30);
-		staforgotfnamelabel.setBounds(255,215,120,30);
-		staforgotlnamelabel.setBounds(255,265,120,30);
-		staforgotcphonelabel.setBounds(255,315,120,30);
 		
-		staforgotidInput.setBounds(365,165,120,30);
-		staforgotfnameInput.setBounds(365,215,120,30);
-		staforgotlnameInput.setBounds(365,265,120,30);
-		staforgotcphoneInput.setBounds(365,315,120,30);
+		staforgotidInput.setBounds(380,192,92,20);
+		staforgotfnameInput.setBounds(380,244,92,20);
+		staforgotlnameInput.setBounds(380,289,92,20);
+		staforgotcphoneInput.setBounds(380,334,92,20);
 		
-		stafindButton.setBounds(265,365,110,30);
-		stafindcancelButton.setBounds(405,365,100,30);
+		stafindButton.setBounds(282,397,73,22);
+		stafindcancelButton.setBounds(422,397,73,22);
 		stafindButton.addActionListener(this);
 		stafindcancelButton.addActionListener(this);
 		
-		staforgotpanel.add(staforgotlabel);
-		staforgotpanel.add(staforgotidlabel);
-		staforgotpanel.add(staforgotfnamelabel);
-		staforgotpanel.add(staforgotlnamelabel);
-		staforgotpanel.add(staforgotcphonelabel);
+		staforgotidInput.setBackground(color1);
+		staforgotidInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		staforgotfnameInput.setBackground(color1);
+		staforgotfnameInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		staforgotlnameInput.setBackground(color1);
+		staforgotlnameInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		staforgotcphoneInput.setBackground(color1);
+		staforgotcphoneInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		stafindButton.setBorderPainted(false);
+		stafindButton.setFocusPainted(false);
+		stafindButton.setContentAreaFilled(false);
+		stafindcancelButton.setBorderPainted(false);
+		stafindcancelButton.setFocusPainted(false);
+		stafindcancelButton.setContentAreaFilled(false);
+		
+		try{ // URL로 이미지 받아오기
+			File sourceimage = new File("c:\\KakaoTalk_20181206_192522782.png");
+			img = ImageIO.read(sourceimage);
+		} catch (IOException e) {
+			System.out.println("Image Loading Fail");
+		}
+		
+		JLabel imgLabel = new JLabel(new ImageIcon(img));
+		imgLabel.setBounds(0,0,800,600);
+		staforgotpanel.add(imgLabel); // 이미지 집어넣기
+		
 		staforgotpanel.add(staforgotidInput);
 		staforgotpanel.add(staforgotfnameInput);
 		staforgotpanel.add(staforgotlnameInput);
@@ -576,7 +652,7 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 		
 		staforgotframe.add(staforgotpanel);
 		staforgotframe.setTitle("FIND PW");
-		staforgotframe.setSize(800,600);
+		staforgotframe.setSize(815,638);
 		staforgotframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		staforgotframe.setVisible(true);
 	}
@@ -694,7 +770,7 @@ public class login implements ActionListener { // cus~는 고객전용, sta~는 
 		}
 	}
 	public static void main(String[] args) {
-		new login();
+		new ImageTest();
 		
 	}
 }
