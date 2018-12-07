@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,8 +15,11 @@ public class ErrorMessage implements ActionListener {
 	private JPanel contentPanel = new JPanel();
 	private JLabel descriptionLabel = new JLabel("조건에 해당하는 방이 없습니다.");
 	private JButton confirmButton = new JButton("확인");
+	JLabel backImage = new JLabel();
 	
 	public ErrorMessage() {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/error_back.png"));
+		backImage.setBounds(0,0,400,200);
 		contentPanel.setLayout(null);
 		descriptionLabel.setBounds(100, 50, 230, 30);
 		descriptionLabel.setFont(new Font("Courier", Font.PLAIN, 15));
@@ -25,7 +29,9 @@ public class ErrorMessage implements ActionListener {
 		contentPanel.add(confirmButton);
 		
 		confirmButton.addActionListener(this);
+		contentPanel.setOpaque(false);
 		
+		frame.add(backImage);
 		frame.setTitle("Error Message");
 		frame.setSize(400, 200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

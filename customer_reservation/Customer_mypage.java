@@ -1,5 +1,7 @@
 package HDMS2;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -8,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,16 +31,9 @@ public class Customer_mypage implements ActionListener {
 	public JFrame fail_frame = new JFrame();
 	private JPanel panel = new JPanel();
 	private JPanel fail_panel = new JPanel();
-	private JLabel idLabel = new JLabel("아이디");
 	private JLabel iddLabel = new JLabel();
-	private JLabel ppwdLabel = new JLabel("새 비밀번호");
-	private JLabel pppwdLabel = new JLabel("새 비밀번호확인");
-	private JLabel birthLabel = new JLabel("생년월일");
 	private JLabel birthhLabel = new JLabel();
-	private JLabel sexLabel = new JLabel("이름");
 	private JLabel sexxLabel = new JLabel();
-	private JLabel phoneLabel = new JLabel("연락처");
-    private JLabel pphoneLabel = new JLabel("임시연락처");
     private JPasswordField pwdInput = new JPasswordField();
     private JTextField idInput = new JTextField();
     private JPasswordField ppwdInput = new JPasswordField();
@@ -48,36 +44,56 @@ public class Customer_mypage implements ActionListener {
     private JTextField pphoneInput = new JTextField();
     private JLabel fail_Label = new JLabel("비밀번호가 일치하지 않습니다.");
     
-    
-    private JButton loginButton = new JButton("저장");
-    private JButton loginButton2 = new JButton("취소");
+    private JButton loginButton = new JButton("");
+    private JButton loginButton2 = new JButton("");
+    JLabel backImage = new JLabel();
     
     String login_id;
     String birthday;
     String name;
 
     public Customer_mypage() throws SQLException {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/mypage_back.png"));
+		backImage.setBounds(0,0,800,600);
+		Color color1 = new Color(0xE6C4BF);
     	connect = new Connect();
     	
     	this.getName();
     	panel.setLayout(null);
-    	idLabel.setBounds(100,100,80, 30);
-    	iddLabel.setBounds(200,100,80,30);
+    	iddLabel.setBounds(320,128,100,30);
+    	iddLabel.setFont(new Font("Courier", Font.PLAIN, 17));
+    	iddLabel.setForeground(color1);
     	
-    	ppwdLabel.setBounds(100,150,80, 30);
-    	pwdInput.setBounds(200, 150, 105, 30);
-    	ppwdInput.setBounds(200,200,105,30);
-    	pppwdLabel.setBounds(100, 200,100, 30 );
-    	birthLabel.setBounds(100,250,80, 30);
-    	birthhLabel.setBounds(200,250,80,30);
-    	sexLabel.setBounds(100,300,80, 30);
-    	sexxLabel.setBounds(200,300,80,30);
-    	phoneLabel.setBounds(100,350,80, 30);
-    	phoneInput.setBounds(200,350,105,30);
-    	pphoneLabel.setBounds(100,400,80, 30);
-    	pphoneInput.setBounds(200,400,105,30);
-        loginButton.setBounds(300, 450, 80, 35);
-        loginButton2.setBounds(500,450,80,35);
+    	pwdInput.setBounds(320, 175, 130, 30);
+    	pwdInput.setBackground(color1);
+    	pwdInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+    	ppwdInput.setBounds(320, 220, 130, 30);
+    	ppwdInput.setBackground(color1);
+    	ppwdInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+    	birthhLabel.setBounds(320,270,150,30);
+    	birthhLabel.setFont(new Font("Courier", Font.PLAIN, 17));
+    	birthhLabel.setForeground(color1);
+ 
+    	sexxLabel.setBounds(320,315,150,30);
+    	sexxLabel.setFont(new Font("Courier", Font.PLAIN, 17));
+    	sexxLabel.setForeground(color1);
+  
+    	phoneInput.setBounds(320,360,105,30);
+    	phoneInput.setBackground(color1);
+    	phoneInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+    	pphoneInput.setBounds(320,410,105,30);
+    	pphoneInput.setBackground(color1);
+    	pphoneInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        loginButton.setBounds(260, 480, 110, 50);
+        loginButton.setBorderPainted(false);
+        loginButton.setFocusPainted(false);
+        loginButton.setContentAreaFilled(false);
+        loginButton2.setBounds(440, 480, 110, 50);
+        loginButton2.setBorderPainted(false);
+        loginButton2.setFocusPainted(false);
+        loginButton2.setContentAreaFilled(false);
         
         iddLabel.setText(login_id);
         birthhLabel.setText(birthday);
@@ -86,23 +102,18 @@ public class Customer_mypage implements ActionListener {
         loginButton.addActionListener(this);
         loginButton2.addActionListener(this);
         
-        panel.add(idLabel);
+
         panel.add(iddLabel);
-        panel.add(ppwdLabel);
         panel.add(ppwdInput);
-        panel.add(pppwdLabel);
         panel.add(pppwdInput);
-        panel.add(birthLabel);
         panel.add(birthhLabel);
-        panel.add(sexLabel);
         panel.add(sexxLabel);
-        panel.add(phoneLabel);
         panel.add(phoneInput);
-        panel.add(pphoneLabel);
         panel.add(pphoneInput);
         panel.add(pwdInput);
         panel.add(loginButton);
         panel.add(loginButton2);
+        panel.add(backImage);
        
         frame.add(panel);
         

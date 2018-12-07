@@ -1,5 +1,6 @@
 package HDMS2;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,17 +29,15 @@ public class Customer_reservation_option implements ActionListener {
 	private JPanel titlePanel = new JPanel();
 	private JPanel contentPanel = new JPanel();
 	private JLabel titleLabel = new JLabel("Option");
-	private JLabel breakfastLabel = new JLabel("조식");
-	private JLabel extraBedLabel = new JLabel("extra bed");
-	private JLabel etcLabel = new JLabel("etc");
+
 	private JTextField breakfastInput = new JTextField();
 	private JTextField extraBedInput = new JTextField();
 	private JTextField etcInput = new JTextField();
-	private JButton plusButton = new JButton("+");
-	private JButton plusButton2 = new JButton("+");
-	private JButton minusButton = new JButton("-");
-	private JButton minusButton2 = new JButton("-");
-	private JButton reservationButton = new JButton("예약하기");
+	private JButton plusButton = new JButton("");
+	private JButton plusButton2 = new JButton("");
+	private JButton minusButton = new JButton("");
+	private JButton minusButton2 = new JButton("");
+	private JButton reservationButton = new JButton("");
 	int breakfastCount, extraBedCount;
 	static String checkInDate;
 	static String checkOutDate;
@@ -46,53 +46,71 @@ public class Customer_reservation_option implements ActionListener {
 	static int childNumber; 
 	String etc;
 	int customerId = 9;
-	
+	JLabel backImage = new JLabel();
 	
 	public Customer_reservation_option() {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/option_back.png"));
+		backImage.setBounds(0,0,800,600);
+		Color color1 = new Color(0xE6C4BF);
+		frame.add(contentPanel);
+		
 		connect = new Connect();
-		titlePanel.setLayout(null);
-		titlePanel.setBounds(0, 0, 800, 80);
 		
 		contentPanel.setLayout(null);
-		contentPanel.setBounds(0, 80, 800, 520);
+		contentPanel.setBounds(0, 00, 800, 600);
 		
 		titleLabel.setBounds(40, 20, 150, 50);
 		titleLabel.setFont(new Font("Courier", Font.BOLD, 30));
-		breakfastLabel.setBounds(200, 200, 60, 30);
-		minusButton.setBounds(300, 200, 30, 30);
-		breakfastInput.setBounds(350, 200, 30, 30);
+		minusButton.setBounds(300, 225, 30, 30);
+		minusButton.setBorderPainted(false);
+		minusButton.setFocusPainted(false);
+		minusButton.setContentAreaFilled(false);
+		breakfastInput.setBounds(351, 229, 25, 24);
 		breakfastInput.setText("0");
 		breakfastInput.setEditable(false);
-		plusButton.setBounds(400, 200, 30, 30);
-		extraBedLabel.setBounds(200, 250, 60, 30);
-		minusButton2.setBounds(300, 250, 30, 30);
-		extraBedInput.setBounds(350, 250, 30, 30);
+		breakfastInput.setBackground(color1);
+		breakfastInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		plusButton.setBounds(400, 225, 30, 30);
+		plusButton.setBorderPainted(false);
+		plusButton.setFocusPainted(false);
+		plusButton.setContentAreaFilled(false);
+		minusButton2.setBounds(300, 275, 30, 30);
+		minusButton2.setBorderPainted(false);
+		minusButton2.setFocusPainted(false);
+		minusButton2.setContentAreaFilled(false);
+		extraBedInput.setBounds(351, 279, 25, 23);
 		extraBedInput.setText("0");
 		extraBedInput.setEditable(false);
-		plusButton2.setBounds(400, 250, 30, 30);
-		etcLabel.setBounds(200, 300, 60, 30);
-		etcInput.setBounds(300, 300, 200, 30);
-		reservationButton.setBounds(600, 380, 130, 40);
+		extraBedInput.setBackground(color1);
+		extraBedInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		plusButton2.setBounds(400, 275, 30, 30);
+		plusButton2.setBorderPainted(false);
+		plusButton2.setFocusPainted(false);
+		plusButton2.setContentAreaFilled(false);
+		etcInput.setBounds(310, 327, 180, 20);
+		etcInput.setBackground(color1);
+		etcInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		reservationButton.setBounds(600, 400, 130, 40);
+		reservationButton.setBorderPainted(false);
+		reservationButton.setFocusPainted(false);
+		reservationButton.setContentAreaFilled(false);
 		
-		titlePanel.add(titleLabel);
-		contentPanel.add(breakfastLabel);
 		contentPanel.add(breakfastInput);
 		contentPanel.add(plusButton);
 		contentPanel.add(minusButton);
 		contentPanel.add(plusButton2);
 		contentPanel.add(minusButton2);
-		contentPanel.add(extraBedLabel);
 		contentPanel.add(extraBedInput);
-		contentPanel.add(etcLabel);
 		contentPanel.add(etcInput);
 		contentPanel.add(reservationButton);
+		contentPanel.add(backImage);
 		
 		frame.setTitle("My Page - Customer - Reservation - Option");
 		frame.setSize(800, 600);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(titlePanel);
-		frame.add(contentPanel);
-		frame.setVisible(true);
+
+		frame.setVisible(false);
 		
 		plusButton.addActionListener(this);
 		plusButton2.addActionListener(this);
@@ -100,7 +118,8 @@ public class Customer_reservation_option implements ActionListener {
 		minusButton2.addActionListener(this);
 		reservationButton.addActionListener(this);
 	}
-	
+
+
 	public static void main(String[] args) {
 		new Customer_reservation_option();
 		System.out.println(roomNumber);
@@ -174,9 +193,7 @@ public class Customer_reservation_option implements ActionListener {
 				
 			} catch (SQLException e1) {
 				e1.printStackTrace();
-			}
-			
-			
+			}			
 		}
 	}
 	

@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,10 +29,9 @@ public class Customer_check implements ActionListener{
 	public JFrame frame = new JFrame();
 	private JPanel titlePanel = new JPanel();
 	private JPanel contentPanel = new JPanel();
-	private JLabel titleLabel = new JLabel("예약 확인");
 	private JLabel nameLabel = new JLabel();
 	private JLabel descriptionLabel = new JLabel("고객님의 예약 내역입니다.");
-	private JButton backButton = new JButton("뒤로가기");
+	private JButton backButton = new JButton("");
 	
 	String name;	
 	String checkInDate;
@@ -42,18 +42,16 @@ public class Customer_check implements ActionListener{
 	String view;
 	String[][] value;
 	String s1;
+	JLabel backImage = new JLabel();
 	
 	public Customer_check() throws SQLException {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/check_back.png"));
+		backImage.setBounds(0,0,800,600);
 		connect = new Connect();
-		titlePanel.setLayout(null);
-		titlePanel.setBounds(0, 0, 800, 80);
 		
 		contentPanel.setLayout(null);
-		contentPanel.setBounds(0, 80, 800, 520);
-		
-		titleLabel.setBounds(40, 20, 150, 50);
-		titleLabel.setFont(new Font("Courier", Font.BOLD, 30));
-		
+		contentPanel.setBounds(0, 0, 800, 600);
+	
 		nameLabel.setBounds(100, 100, 150, 40);
 		nameLabel.setFont(new Font("Courier", Font.PLAIN, 15));
 		
@@ -64,13 +62,16 @@ public class Customer_check implements ActionListener{
 		
 		makeTable();
 		
-		backButton.setBounds(600, 400, 100, 40);
+		backButton.setBounds(600, 390, 110, 50);
+		backButton.setBorderPainted(false);
+		backButton.setFocusPainted(false);
+		backButton.setContentAreaFilled(false);
 		backButton.addActionListener(this);
 		
-		titlePanel.add(titleLabel);
 		contentPanel.add(nameLabel);
 		contentPanel.add(descriptionLabel);
 		contentPanel.add(backButton);
+		contentPanel.add(backImage);
 
 		frame.setTitle("My Page - Customer - Check Reservation");
 		frame.setSize(800, 600);
@@ -107,7 +108,6 @@ public class Customer_check implements ActionListener{
 			rs = stmt.executeQuery(sqlStr);
 			while(rs.next()) {
 				name = rs.getString("first_name") + " " + rs.getString("last_name");
-				System.out.println(name);
 			}
 			rs.close();
 			stmt.close();
@@ -174,6 +174,5 @@ public class Customer_check implements ActionListener{
 		contentPanel.add(scroll);
 		
 	}
-	
-	
+
 }

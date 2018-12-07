@@ -1,11 +1,13 @@
 package HDMS2;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,44 +18,40 @@ public class Customer_confirm implements ActionListener {
 	public JFrame main_frame = new JFrame();
 	public JFrame frame = new JFrame();
 	private JPanel panel = new JPanel();
-	private JLabel idLabel = new JLabel("예약이 완료되었습니다.");
-	private JLabel iddLabel = new JLabel("예약번호");
 	private JLabel idddLabel = new JLabel();
-    private JLabel loginButton = new JLabel("Check In");
     private JLabel login = new JLabel();
-    private JLabel loginButton2 = new JLabel("Check Out");
     private JLabel login2 = new JLabel();
-    private JButton admitButton = new JButton("확인");
+    private JButton admitButton = new JButton("");
     
     static int reservationId;
-    static String checkInDate;
-    static String checkOutDate;
+    static String checkInDate = "181127";
+    static String checkOutDate = "181127";
     static int customerId;
     
+    JLabel backImage = new JLabel();
+    
     public Customer_confirm() {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/confirm_back.png"));
+		backImage.setBounds(0,0,800,600);
+		
     	panel.setLayout(null);
-    	idLabel.setBounds(300,100,400,200);
-    	idLabel.setFont(new Font("Courier", Font.BOLD, 20));
-        iddLabel.setBounds(340,270,200,100);
-        idddLabel.setBounds(400,270,200,100);
-        loginButton.setBounds(190, 350, 80, 35);
-        login.setBounds(260,350,80,35);
-        loginButton2.setBounds(450,350,80,35);
-        login2.setBounds(525,350,80,35);
-        admitButton.setBounds(355,450,80,35);
-        System.out.println("hi");
+        idddLabel.setBounds(400,289,200,100);
+        login.setBounds(260,369,80,35);
+        login2.setBounds(525,369,80,35);
+        admitButton.setBounds(355,470,80,35);
+		admitButton.setBorderPainted(false);
+		admitButton.setFocusPainted(false);
+		admitButton.setContentAreaFilled(false);
+
         idddLabel.setText(Integer.toString(reservationId));
         login.setText(checkInDate);
         login2.setText(checkOutDate);
  
-        panel.add(idLabel);
-        panel.add(iddLabel);
         panel.add(idddLabel);
-        panel.add(loginButton);
         panel.add(login);
-        panel.add(loginButton2);
         panel.add(login2);
         panel.add(admitButton);
+        panel.add(backImage);
         
         admitButton.addActionListener(this);
         

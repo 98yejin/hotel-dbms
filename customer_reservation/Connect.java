@@ -19,6 +19,8 @@ public class Connect {
 			Customer_reservation.dbTest = dbTest;
 			Customer_reservation_option.dbTest = dbTest;
 			Customer_check.dbTest = dbTest;
+			Customer_enter_mypage.dbTest = dbTest;
+			Customer_mypage.dbTest = dbTest;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("데이터베이스 연결에 실패하였습니다.");

@@ -4,8 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Customer_main implements ActionListener {
@@ -19,8 +21,12 @@ public class Customer_main implements ActionListener {
 	private JButton reservation_button = new JButton("예약");
 	private JButton check_button = new JButton("예약 확인");
 	private JButton mypage_button = new JButton("마이 페이지");
+	JLabel backImage = new JLabel();
 	
 	public Customer_main() throws SQLException {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/main_back.png"));
+		backImage.setBounds(0,0,800,600);
+		
 		Customer_reservation customer_reservation = new Customer_reservation();
 		Customer_check customer_check = new Customer_check();
 		Customer_enter_mypage customer_enter_mypage = new Customer_enter_mypage();
@@ -34,9 +40,9 @@ public class Customer_main implements ActionListener {
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		reservation_button.setBounds(0, 5, 265, 570);
-		check_button.setBounds(265, 5, 265, 570);
-		mypage_button.setBounds(530, 5, 265, 570);
+		reservation_button.setBounds(40, 80, 230, 430);
+		check_button.setBounds(285, 80, 230, 430);
+		mypage_button.setBounds(530, 80, 230, 430);
 		
 		reservation_button.addActionListener(this);
 		check_button.addActionListener(this);
@@ -45,7 +51,11 @@ public class Customer_main implements ActionListener {
 		panel.add(reservation_button);
 		panel.add(check_button);
 		panel.add(mypage_button);
+		panel.setOpaque(false);
+		
+		frame.add(backImage);
 		frame.add(panel);
+		
 		frame.setVisible(true);
 	}
 	

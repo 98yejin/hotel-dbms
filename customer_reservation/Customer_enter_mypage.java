@@ -7,7 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.awt.Color;
 import java.awt.Font;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,27 +26,34 @@ public class Customer_enter_mypage implements ActionListener {
 	public JFrame mypage_frame = new JFrame();
 	public JFrame frame = new JFrame();
 	private JPanel panel = new JPanel();
-	private JLabel idLabel = new JLabel("My page");
-	private JLabel pwdLabel = new JLabel("비밀번호");
+
     private JPasswordField pwdInput = new JPasswordField();
-    private JButton loginButton = new JButton("로그인");
+    private JButton loginButton = new JButton("");
+    JLabel backImage = new JLabel();
     
     public Customer_enter_mypage() throws SQLException {
+		backImage.setIcon(new ImageIcon("/Users/koserim/Desktop/enter_back.png"));
+		backImage.setBounds(0,0,800,600);
+		Color color1 = new Color(0xE6C4BF);
+		
     	connect = new Connect();
     	Customer_mypage customer_mypage = new Customer_mypage();
     	mypage_frame = customer_mypage.frame;
     	
     	panel.setLayout(null);
-    	idLabel.setBounds(360,10,300,300);
-    	idLabel.setFont(new Font ("Courier", Font.BOLD, 18));
-    	pwdLabel.setBounds(300, 270, 60, 30);
-        pwdInput.setBounds(350, 270, 80, 30);
-        loginButton.setBounds(450, 268, 80, 35);
+        pwdInput.setBounds(330, 275, 120, 30);
+		pwdInput.setBackground(color1);
+		pwdInput.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        loginButton.setBounds(506, 262, 110, 50);
+        loginButton.setBorderPainted(false);
+        loginButton.setFocusPainted(false);
+        loginButton.setContentAreaFilled(false);
+        
         loginButton.addActionListener(this);
-        panel.add(pwdLabel);
-        panel.add(idLabel);
+
         panel.add(pwdInput);
         panel.add(loginButton);
+        panel.add(backImage);
         
         frame.add(panel);
         
